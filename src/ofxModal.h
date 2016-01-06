@@ -98,6 +98,7 @@ class ofxModal {
                 mTitle.color = theme->fonts.title.color;
                 mMessage.text.setFont(theme->fonts.message.ttf);
                 mMessage.text.setColor(theme->fonts.message.color);
+                mMessage.text.setSpacing(theme->fonts.message.spacing);
                 mHeaderHeight = mModal.padding * 2 + mCloseButton.rect.height;
                 mFooterHeight = mModal.padding * 3;
             }
@@ -109,7 +110,7 @@ class ofxModal {
         int getPadding() { return mModal.padding; }
     
         template<typename T, typename args, class ListenerClass>
-        void onModalEvent(ModalEvent::EventType event, T* owner, void (ListenerClass::*listenerMethod)(args))
+        void onModalEvent(ofxModalEvent::EventType event, T* owner, void (ListenerClass::*listenerMethod)(args))
         {
             using namespace std::placeholders;
             subscribers.push_back({event, std::bind(listenerMethod, owner, _1)});
@@ -127,11 +128,11 @@ class ofxModal {
             mFooterButtons.push_back(btn);
         }
     
-        void dispatchCallbacks(ModalEvent::EventType eType)
+        void dispatchCallbacks(ofxModalEvent::EventType eType)
         {
             for(auto s: subscribers){
                 if (s.eType == eType){
-                    s.callback(ModalEvent(eType, this));
+                    s.callback(ofxModalEvent(eType, this));
                 }
             }
         }
@@ -218,12 +219,12 @@ class ofxModal {
             if (mAnimation.nTicks == mAnimation.tTicks){
                 if (mState == FADING_IN){
                     mState = VISIBLE;
-                    dispatchCallbacks(ModalEvent::SHOWN);
+                    dispatchCallbacks(ofxModalEvent::SHOWN);
                 }   else if (mState == FADING_OUT){
                     mState = HIDDEN;
                 // modal is closed, ok to show another one now //
                     activeModal = nullptr;
-                    dispatchCallbacks(ModalEvent::HIDDEN);
+                    dispatchCallbacks(ofxModalEvent::HIDDEN);
                     ofRemoveListener(ofEvents().draw, this, &ofxModal::onDraw);
                     ofRemoveListener(ofEvents().update, this, &ofxModal::onUpdate);
                     ofRemoveListener(ofEvents().mouseMoved, this, &ofxModal::onMouseMove);
@@ -326,9 +327,9 @@ class ofxModal {
         event subscribers
     */
     
-        typedef std::function<void(ModalEvent)> onModalEventCallback;
+        typedef std::function<void(ofxModalEvent)> onModalEventCallback;
         struct subscriber{
-            ModalEvent::EventType eType;
+            ofxModalEvent::EventType eType;
             onModalEventCallback callback;
         };
         vector<subscriber> subscribers;
@@ -397,10 +398,11 @@ class ofxModalConfirm : public ofxModal {
     
         void onButtonEvent(ofxDatGuiButtonEvent e)
         {
-            cout << "button clicked" << endl;
+            hide();
             if (e.target == cancel){
-                hide();
-                dispatchCallbacks(ModalEvent::CANCEL);
+                dispatchCallbacks(ofxModalEvent::CANCEL);
+            }   else if (e.target == confirm){
+                dispatchCallbacks(ofxModalEvent::CONFIRM);
             }
         }
     

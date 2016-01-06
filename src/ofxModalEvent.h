@@ -23,15 +23,15 @@
 #pragma once
 class ofxModal;
 
-struct ModalEvent
+struct ofxModalEvent
 {
     enum EventType{
         SHOWN,
         HIDDEN,
-        OK,
-        CANCEL
+        CANCEL,
+        CONFIRM,
     };
-    ModalEvent(EventType type, ofxModal* target){
+    ofxModalEvent(EventType type, ofxModal* target){
         this->type = type;
         this->target = target;
     }
@@ -39,24 +39,3 @@ struct ModalEvent
     ofxModal* target;
 };
 
-struct ModalConfirmEvent
-{
-    enum EventType{
-        OK,
-        CANCEL
-    };
-    ModalConfirmEvent(EventType type){
-    
-    }
-};
-
-struct ModalCustomEvent
-{
-    enum EventType{
-        CANCEL,
-        SUBMIT
-    };
-    ModalCustomEvent(EventType type){
-        
-    }
-};

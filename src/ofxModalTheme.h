@@ -31,20 +31,22 @@ class ofxModalTheme {
     public:
     
         ofxModalTheme(){
-            buttons.close.btnDefault.load("ofxmodal_assets/modal-close.png");
-            buttons.close.btnOnHover.load("ofxmodal_assets/modal-close-hover.png");
+            buttons.close.btnDefault.load("ofxbraitsch/ofxmodal/modal-close.png");
+            buttons.close.btnOnHover.load("ofxbraitsch/ofxmodal/modal-close-hover.png");
         
             fonts.title.color = ofColor::fromHex(0x111111);
-            fonts.title.load("ofxmodal_assets/HelveticaNeueLTStd-Md.otf", 24);
+            fonts.title.load("ofxbraitsch/fonts/HelveticaNeueLTStd-Md.otf", 24);
         
+            fonts.message.spacing = 14.0f;
             fonts.message.color = ofColor::fromHex(0x777777);
-            fonts.message.load("ofxmodal_assets/HelveticaNeueLTStd-Md.otf", 20);
+            fonts.message.load("ofxbraitsch/fonts/Verdana.ttf", 20);
         }
     
         struct font{
             int size;
             string file;
             ofColor color;
+            float spacing;
             shared_ptr<ofTrueTypeFont> ttf;
             font(){
                 ttf = make_shared<ofTrueTypeFont>();
@@ -52,7 +54,7 @@ class ofxModalTheme {
             void load(string f, int s){
                 file = f;
                 size = s;
-                ttf->load(file, size);
+                ttf->load(file, size, true, false, true, 0.4, 92);
             }
             void draw(string s, int x, int y){
                 if (ttf->isLoaded()) ttf->drawString(s, x, y);
@@ -101,3 +103,4 @@ class ofxModalTheme {
 
 
 };
+
