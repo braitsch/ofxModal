@@ -3,8 +3,12 @@
 void ofApp::setup()
 {
     ofSetWindowPosition(ofGetScreenWidth()/2 - ofGetWidth()/2, 0);
-    confirm.onModalEvent(ofxModalEvent::CANCEL, this, &ofApp::onModalCancel);
-    confirm.onModalEvent(ofxModalEvent::CONFIRM, this, &ofApp::onModalConfirm);
+    
+// listen for events //
+    confirm.onModalEvent(ofxModalEvent::SHOWN, this, &ofApp::onModalEvent);
+    confirm.onModalEvent(ofxModalEvent::HIDDEN, this, &ofApp::onModalEvent);
+    confirm.onModalEvent(ofxModalEvent::CANCEL, this, &ofApp::onModalEvent);
+    confirm.onModalEvent(ofxModalEvent::CONFIRM, this, &ofApp::onModalEvent);
 }
 
 void ofApp::update() { }
@@ -19,13 +23,16 @@ void ofApp::keyPressed(int key)
     }
 }
 
-void ofApp::onModalCancel(ofxModalEvent e)
+void ofApp::onModalEvent(ofxModalEvent e)
 {
-    cout << "cancel button was selected" << endl;
-}
-
-void ofApp::onModalConfirm(ofxModalEvent e)
-{
-    cout << "confirm button was selected" << endl;
+    if (e.type == ofxModalEvent::SHOWN){
+        cout << "modal window is open" << endl;
+    }   else if (e.type == ofxModalEvent::HIDDEN){
+        cout << "modal window is closed" << endl;
+    }   else if (e.type == ofxModalEvent::CANCEL){
+        cout << "cancel button was selected" << endl;
+    }   else if (e.type == ofxModalEvent::CONFIRM){
+        cout << "confirm button was selected" << endl;
+    }
 }
 
