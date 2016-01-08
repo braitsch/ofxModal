@@ -21,7 +21,7 @@
 */
 
 #pragma once
-class ofxModal;
+class ofxModalWindow;
 
 struct ofxModalEvent
 {
@@ -31,11 +31,11 @@ struct ofxModalEvent
         CANCEL,
         CONFIRM,
     };
-    ofxModalEvent(EventType type, ofxModal* target){
+    ofxModalEvent(EventType type, ofxModalWindow* target){
         this->type = type;
         this->target = target;
     }
     EventType type;
-    ofxModal* target;
+    ofxModalWindow* target;
 };
 

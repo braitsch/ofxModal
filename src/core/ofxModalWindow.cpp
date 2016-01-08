@@ -20,21 +20,8 @@
     SOFTWARE.
 */
 
-#include "ofxModal.h"
+#include "ofxModalWindow.h"
 
-vector<ofxModal*> ofxModal::modals;
-ofxModal* ofxModal::activeModal = nullptr;
-std::shared_ptr<ofxModalTheme> ofxModal::mTheme = nullptr;
-
-ofxModal::ofxModal()
-{
-    modals.push_back(this);
-    if (mTheme == nullptr) mTheme = std::make_shared<ofxModalTheme>();
-    setTheme(mTheme);
-    mCloseButton.mouseOver = false;
-}
-
-bool ofxModal::visible()
-{
-    return activeModal != nullptr;
-}
+vector<ofxModalWindow*> ofxModalWindow::modals;
+ofxModalWindow* ofxModalWindow::activeModal = nullptr;
+std::shared_ptr<ofxModalTheme> ofxModalWindow::mTheme = nullptr;
