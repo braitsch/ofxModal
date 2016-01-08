@@ -67,6 +67,7 @@ class ofxModal {
         {
             mModal.autoSize = false;
             mModal.height.body = h - mModal.height.header - mModal.height.footer;
+        // establish a minimun body height //
             if (mModal.height.body < 200) mModal.height.body = 200;
         }
     
@@ -83,36 +84,30 @@ class ofxModal {
             if (mModal.autoSize) mModal.height.body = mMessage.getHeight() + mModal.padding * 2;
         }
     
-        void setTheme(std::shared_ptr<ofxModalTheme> theme, bool applyToAll = false)
+        virtual void setTheme(std::shared_ptr<ofxModalTheme> theme)
         {
-            if (applyToAll){
-                for(int i=0; i<modals.size(); i++){
-                    modals[i]->setTheme(theme, false);
-                }
-            }   else{
-                mColor.header = theme->color.modal.header;
-                mColor.body = theme->color.modal.body;
-                mColor.footer = theme->color.modal.footer;
-                mColor.hrule = theme->color.modal.hrule;
-                mModal.padding = theme->layout.modal.padding;
-                mCloseButton.rect.width = theme->close_button.width;
-                mCloseButton.rect.height = theme->close_button.height;
-                mCloseButton.hitPadding = theme->close_button.hitPadding;
-                mCloseButton.normal = &theme->close_button.normal;
-                mCloseButton.active = &theme->close_button.active;
-                mAnimation.tTicks = theme->animation.speed * ofGetFrameRate();
-                mAnimation.tOpacity = theme->alpha.window.background;
-                mTitle.font = theme->fonts.title;
-                mColor.title = theme->color.text.title;
-                mMessage.setFont(theme->fonts.message);
-                mMessage.setColor(theme->color.text.body);
-                mMessage.setSpacing(theme->layout.text.wordSpacing);
-                mModal.height.header = mModal.padding * 2 + mCloseButton.rect.height;
-                mModal.height.footer = mModal.padding * 3;
-                mModal.height.body = theme->layout.modal.height - mModal.height.header - mModal.height.footer;
-                mModal.autoSize = theme->layout.modal.autoSize;
-                setWidth(theme->layout.modal.width);
-            }
+            mColor.title = theme->color.text.title;
+            mColor.header = theme->color.modal.header;
+            mColor.body = theme->color.modal.body;
+            mColor.footer = theme->color.modal.footer;
+            mColor.hrule = theme->color.modal.hrule;
+            mCloseButton.normal = &theme->close_button.normal;
+            mCloseButton.active = &theme->close_button.active;
+            mCloseButton.rect.width = theme->close_button.width;
+            mCloseButton.rect.height = theme->close_button.height;
+            mCloseButton.hitPadding = theme->close_button.hitPadding;
+            mAnimation.tTicks = theme->animation.speed * ofGetFrameRate();
+            mAnimation.tOpacity = theme->alpha.window.background;
+            mTitle.font = theme->fonts.title;
+            mMessage.setFont(theme->fonts.message);
+            mMessage.setColor(theme->color.text.body);
+            mMessage.setSpacing(theme->layout.text.wordSpacing);
+            mModal.height.header = mModal.padding * 2 + mCloseButton.rect.height;
+            mModal.height.footer = mModal.padding * 3;
+            mModal.height.body = theme->layout.modal.height - mModal.height.header - mModal.height.footer;
+            mModal.padding = theme->layout.modal.padding;
+            mModal.autoSize = theme->layout.modal.autoSize;
+            setWidth(theme->layout.modal.width);
         }
     
         static bool visible();
@@ -147,6 +142,8 @@ class ofxModal {
                 }
             }
         }
+    
+        static std::shared_ptr<ofxModalTheme> mTheme;
 
     private:
     
@@ -364,7 +361,6 @@ class ofxModal {
     
         static ofxModal* activeModal;
         static vector<ofxModal*> modals;
-        static std::shared_ptr<ofxModalTheme> mTheme;
     
 };
 
@@ -375,10 +371,9 @@ class ofxModalConfirm : public ofxModal {
 
         ofxModalConfirm()
         {
-            setWidth(800);
-            setTitle("CONFIRM");
-            setMessage("This is a confirm message. Stumptown street art photo booth try-hard cold-pressed, pour-over raw denim four loko vinyl. Banjo drinking vinegar tousled, Brooklyn Neutra meggings mlkshk freegan whatever.");
             addButtons();
+            setTheme(mTheme);
+            setTitle("CONFIRM");
         }
     
         void draw()
@@ -393,6 +388,19 @@ class ofxModalConfirm : public ofxModal {
             confirm->update();
         }
     
+        void setTheme(std::shared_ptr<ofxModalTheme> theme)
+        {
+            ofxModal::setTheme(theme);
+            cancel->setWidth(theme->layout.button.width);
+            cancel->setLabelColor(theme->color.button.cancel.label);
+            cancel->setBackgroundColors(theme->color.button.cancel.background,
+                theme->color.button.cancel.backgroundOnMouseOver, theme->color.button.cancel.backgroundOnMouseDown);
+            confirm->setWidth(theme->layout.button.width);
+            confirm->setLabelColor(theme->color.button.confirm.label);
+            confirm->setBackgroundColors(theme->color.button.confirm.background,
+                theme->color.button.confirm.backgroundOnMouseOver, theme->color.button.confirm.backgroundOnMouseDown);
+        }
+    
     protected:
     
         ofxDatGuiButton* cancel;
@@ -403,17 +411,11 @@ class ofxModalConfirm : public ofxModal {
         void addButtons()
         {
             cancel = new ofxDatGuiButton("CANCEL");
-            cancel->setWidth(140);
             cancel->setStripeVisible(false);
-            cancel->setLabelColor(ofColor::fromHex(0x333333));
-            cancel->setBackgroundColors(ofColor::fromHex(0xffffff), ofColor::fromHex(0xE6E6E6), ofColor::fromHex(0xD4D4D4));
             cancel->setLabelAlignment(ofxDatGuiAlignment::CENTER);
             cancel->onButtonEvent(this, &ofxModalConfirm::onButtonEvent);
             confirm = new ofxDatGuiButton("OK");
-            confirm->setWidth(140);
             confirm->setStripeVisible(false);
-            confirm->setLabelColor(ofColor::fromHex(0xffffff));
-            confirm->setBackgroundColors(ofColor::fromHex(0x337ab7), ofColor::fromHex(0x286090), ofColor::fromHex(0x1f4c73));
             confirm->setLabelAlignment(ofxDatGuiAlignment::CENTER);
             confirm->onButtonEvent(this, &ofxModalConfirm::onButtonEvent);
             attachFooterButton(confirm);

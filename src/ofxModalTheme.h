@@ -47,15 +47,26 @@ class ofxModalTheme {
         struct{
             struct{
                 struct{
-                    ofColor label = hex(0x1A1A1A);
-                    ofColor labelOnMouseOver = hex(0x777777);
-                    ofColor labelOnMouseDown = hex(0x222222);
-                    ofColor background = hex(0x1A1A1A);
-                    ofColor backgroundOnMouseOver = hex(0x777777);
-                    ofColor backgroundOnMouseDown = hex(0x222222);
-                    ofColor border = hex(0x1A1A1A);
-                    ofColor borderOnMouseOver = hex(0x777777);
-                    ofColor borderOnMouseDown = hex(0x222222);
+                    ofColor label = hex(0x333333);
+                    ofColor labelOnMouseOver = hex(0x333333);
+                    ofColor labelOnMouseDown = hex(0x333333);
+                    ofColor background = hex(0xffffff);
+                    ofColor backgroundOnMouseOver = hex(0xE6E6E6);
+                    ofColor backgroundOnMouseDown = hex(0xD4D4D4);
+//                    ofColor border = hex(0x1A1A1A);
+//                    ofColor borderOnMouseOver = hex(0x777777);
+//                    ofColor borderOnMouseDown = hex(0x222222);
+                } cancel;
+                struct{
+                    ofColor label = hex(0xffffff);
+                    ofColor labelOnMouseOver = hex(0xffffff);
+                    ofColor labelOnMouseDown = hex(0xffffff);
+                    ofColor background = hex(0x337ab7);
+                    ofColor backgroundOnMouseOver = hex(0x286090);
+                    ofColor backgroundOnMouseDown = hex(0x1f4c73);
+//                    ofColor border = hex(0x1A1A1A);
+//                    ofColor borderOnMouseOver = hex(0x777777);
+//                    ofColor borderOnMouseDown = hex(0x222222);
                 } confirm;
             } button;
             struct{
@@ -63,13 +74,13 @@ class ofxModalTheme {
                 ofColor body = hex(0x777777);
             } text;
             struct{
-                ofColor header = ofColor::whiteSmoke;
-                ofColor body = ofColor::whiteSmoke;
-                ofColor footer = ofColor::whiteSmoke;
-                ofColor hrule = ofColor::black;
+                ofColor header = hex(0xFFFFFF);
+                ofColor body = hex(0xFFFFFF);
+                ofColor footer = hex(0xF7F7F9);
+                ofColor hrule = hex(0x333333);
             } modal;
             struct{
-                ofColor background = ofColor::black;
+                ofColor background = hex(0x000000);
             } window;
         } color;
     
@@ -90,7 +101,7 @@ class ofxModalTheme {
     
         struct{
             struct{
-                int width = 140;
+                int width = 160;
                 int height = 80;
             } button;
             struct {

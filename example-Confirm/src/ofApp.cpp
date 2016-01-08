@@ -10,6 +10,7 @@ void ofApp::setup()
     confirm.onModalEvent(ofxModalEvent::CANCEL, this, &ofApp::onModalEvent);
     confirm.onModalEvent(ofxModalEvent::CONFIRM, this, &ofApp::onModalEvent);
 
+    confirm.setMessage("This is a confirm message. Stumptown street art photo booth try-hard cold-pressed, pour-over raw denim four loko vinyl. Banjo drinking vinegar tousled, Brooklyn Neutra meggings mlkshk freegan whatever.");
 }
 
 void ofApp::update() { }
