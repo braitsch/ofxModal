@@ -29,68 +29,51 @@ class ofxModalConfirm : public ofxModalWindow {
 
         ofxModalConfirm()
         {
-            addButtons();
+            setTitle("confirm");
+            addButton("ok");
+            addButton("cancel");
             setTheme(mTheme);
-            setTitle("CONFIRM");
             setMessage("This is a confirm message. Stumptown street art photo booth try-hard cold-pressed, pour-over raw denim four loko vinyl. Banjo drinking vinegar tousled, Brooklyn Neutra meggings mlkshk freegan whatever.");
         }
     
         void draw()
         {
-            cancel->draw();
-            confirm->draw();
+
         }
     
         void update()
         {
-            cancel->update();
-            confirm->update();
+
         }
     
         void setTheme(std::shared_ptr<ofxModalTheme> theme)
         {
             ofxModalWindow::setTheme(theme);
-            cancel->setWidth(theme->layout.button.width);
-            cancel->setLabelColor(theme->color.button.cancel.label);
-            cancel->setBackgroundColors(theme->color.button.cancel.background,
-                theme->color.button.cancel.backgroundOnMouseOver, theme->color.button.cancel.backgroundOnMouseDown);
-            confirm->setWidth(theme->layout.button.width);
-            confirm->setLabelColor(theme->color.button.confirm.label);
-            confirm->setBackgroundColors(theme->color.button.confirm.background,
-                theme->color.button.confirm.backgroundOnMouseOver, theme->color.button.confirm.backgroundOnMouseDown);
+            ofxDatGuiButton* b1 = getButton("cancel");
+            b1->setWidth(theme->layout.button.width);
+            b1->setLabelColor(theme->color.button.wireframe.label);
+            b1->setBackgroundColors(theme->color.button.wireframe.background,
+                theme->color.button.wireframe.backgroundOnMouseOver, theme->color.button.wireframe.backgroundOnMouseDown);
+            ofxDatGuiButton* b2 = getButton("ok");
+            b2->setWidth(theme->layout.button.width);
+            b2->setLabelColor(theme->color.button.darkblue.label);
+            b2->setBackgroundColors(theme->color.button.darkblue.background,
+                theme->color.button.darkblue.backgroundOnMouseOver, theme->color.button.darkblue.backgroundOnMouseDown);
             if (theme->layout.button.borders) {
-                cancel->setBorder(theme->color.button.cancel.border, 1);
-                confirm->setBorder(theme->color.button.confirm.border, 1);
+                b1->setBorder(theme->color.button.wireframe.border, 1);
+                b2->setBorder(theme->color.button.darkblue.border, 1);
             }
         }
-    
-    protected:
-    
-        ofxDatGuiButton* cancel;
-        ofxDatGuiButton* confirm;
+
     
     private:
-    
-        void addButtons()
-        {
-            cancel = new ofxDatGuiButton("CANCEL");
-            cancel->setStripeVisible(false);
-            cancel->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-            cancel->onButtonEvent(this, &ofxModalConfirm::onButtonEvent);
-            confirm = new ofxDatGuiButton("OK");
-            confirm->setStripeVisible(false);
-            confirm->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-            confirm->onButtonEvent(this, &ofxModalConfirm::onButtonEvent);
-            attachFooterButton(confirm);
-            attachFooterButton(cancel);
-        }
     
         void onButtonEvent(ofxDatGuiButtonEvent e)
         {
             hide();
-            if (e.target == cancel){
+            if (e.target == getButton("cancel")){
                 dispatchCallbacks(ofxModalEvent::CANCEL);
-            }   else if (e.target == confirm){
+            }   else if (e.target == getButton("ok")){
                 dispatchCallbacks(ofxModalEvent::CONFIRM);
             }
         }

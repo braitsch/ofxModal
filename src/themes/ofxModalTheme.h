@@ -43,7 +43,7 @@ class ofxModalTheme {
     */
     
         struct{
-            struct{
+            struct{            
                 struct{
                     ofColor label = ofxDatGuiTheme::hex(0x333333);
                     ofColor labelOnMouseOver = ofxDatGuiTheme::hex(0x333333);
@@ -52,7 +52,7 @@ class ofxModalTheme {
                     ofColor backgroundOnMouseOver = ofxDatGuiTheme::hex(0xE6E6E6);
                     ofColor backgroundOnMouseDown = ofxDatGuiTheme::hex(0xD4D4D4);
                     ofColor border = ofxDatGuiTheme::hex(0xCCCCCC);
-                } cancel;
+                } wireframe;
                 struct{
                     ofColor label = ofxDatGuiTheme::hex(0xffffff);
                     ofColor labelOnMouseOver = ofxDatGuiTheme::hex(0xffffff);
@@ -61,7 +61,7 @@ class ofxModalTheme {
                     ofColor backgroundOnMouseOver = ofxDatGuiTheme::hex(0x286090);
                     ofColor backgroundOnMouseDown = ofxDatGuiTheme::hex(0x1f4c73);
                     ofColor border = ofxDatGuiTheme::hex(0x1f4c73);
-                } confirm;
+                } darkblue;
             } button;
             struct{
                 ofColor title = ofxDatGuiTheme::hex(0x111111);

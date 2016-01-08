@@ -73,7 +73,7 @@ class ofxModalWindow {
     
         void setTitle(string text)
         {
-            mTitle.text = text;
+            mTitle.text = ofToUpper(text);
             mTitle.height = mTitle.font->height(mTitle.text);
         }
     
@@ -135,10 +135,24 @@ class ofxModalWindow {
     
         virtual void draw() = 0;
         virtual void update() = 0;
+        virtual void onButtonEvent(ofxDatGuiButtonEvent e) = 0;
     
-        void attachFooterButton(ofxDatGuiButton* btn)
+        ofxDatGuiButton* addButton(string label)
         {
+            ofxDatGuiButton* btn = new ofxDatGuiButton(ofToUpper(label));
+            btn->setStripeVisible(false);
+            btn->setLabelAlignment(ofxDatGuiAlignment::CENTER);
+            btn->onButtonEvent(this, &ofxModalWindow::onButtonEvent);
             mFooterButtons.push_back(btn);
+            return btn;
+        }
+    
+        ofxDatGuiButton* getButton(string label)
+        {
+            for (auto button:mFooterButtons){
+                if (button->is(label)) return button;
+            }
+            return nullptr;
         }
     
         void dispatchCallbacks(ofxModalEvent::EventType eType)
@@ -184,6 +198,8 @@ class ofxModalWindow {
                 mCloseButton.active->draw(mCloseButton.rect);
             }
             ofPopStyle();
+        // draw footer buttons //
+            for(auto button:mFooterButtons) button->draw();
         // derived classes draw //
             draw();
         }
@@ -194,8 +210,9 @@ class ofxModalWindow {
                 animate();
             }   else{
                 update();
+            // update footer buttons //
+                for(auto button:mFooterButtons) button->update();
             }
-            layout();
         }
     
         inline void layout()
@@ -253,6 +270,8 @@ class ofxModalWindow {
                     ofRemoveListener(ofEvents().mousePressed, this, &ofxModalWindow::onMousePress);
                 }
             }
+        // sync modal components as window moves //
+            layout();
         }
     
         void onMousePress(ofMouseEventArgs &e)

@@ -54,6 +54,7 @@
 		8A7333391C40718C00609E8A /* ofxModalConfirm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxModalConfirm.h; sourceTree = "<group>"; };
 		8A73333A1C40718C00609E8A /* ofxModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxModal.h; sourceTree = "<group>"; };
 		8A73333C1C40718C00609E8A /* ofxModalTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxModalTheme.h; sourceTree = "<group>"; };
+		8A73333E1C4072A000609E8A /* ofxModalInput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxModalInput.h; sourceTree = "<group>"; };
 		8A837D911C3F37730050A182 /* ofxParagraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxParagraph.cpp; sourceTree = "<group>"; };
 		8A837D921C3F37730050A182 /* ofxParagraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxParagraph.h; sourceTree = "<group>"; };
 		8A837D951C3F37900050A182 /* ofxSmartFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSmartFont.cpp; sourceTree = "<group>"; };
@@ -115,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				8A7333381C40718C00609E8A /* ofxModalAlert.h */,
+				8A73333E1C4072A000609E8A /* ofxModalInput.h */,
 				8A7333391C40718C00609E8A /* ofxModalConfirm.h */,
 			);
 			path = modals;

@@ -23,53 +23,14 @@
 #pragma once
 #include "ofxModalWindow.h"
 
-class ofxModalAlert : public ofxModalWindow {
+class ofxModalInput : public ofxModalWindow {
+
 
     public:
+        ofxModalInput()
+        {
+        
+        }
 
-        ofxModalAlert()
-        {
-            addButton("ok");
-            setTheme(mTheme);
-            setTitle("alert");
-            setMessage("This is an alert message!");
-        }
-    
-        void draw()
-        {
-
-        }
-    
-        void update()
-        {
-
-        }
-    
-        void setTheme(std::shared_ptr<ofxModalTheme> theme)
-        {
-            ofxModalWindow::setTheme(theme);
-            ofxDatGuiButton* b1 = getButton("ok");
-            b1->setWidth(theme->layout.button.width);
-            b1->setLabelColor(theme->color.button.wireframe.label);
-            b1->setBackgroundColors(theme->color.button.wireframe.background,
-                theme->color.button.wireframe.backgroundOnMouseOver,
-                theme->color.button.wireframe.backgroundOnMouseDown);
-            if (theme->layout.button.borders) {
-                b1->setBorder(theme->color.button.wireframe.border, 1);
-            }
-        }
-    
-    private:
-    
-        void onButtonEvent(ofxDatGuiButtonEvent e)
-        {
-            hide();
-            if (e.target == getButton("ok")){
-                dispatchCallbacks(ofxModalEvent::CONFIRM);
-            }
-        }
 
 };
-
-
-
