@@ -211,7 +211,7 @@ class ofxModal {
             mCloseButton.hitRect.width = mCloseButton.rect.width + (mCloseButton.hitPadding * 2);
             mCloseButton.hitRect.height = mCloseButton.rect.height + (mCloseButton.hitPadding * 2);
             for(int i=0; i<mFooterButtons.size(); i++){
-                int buttonSpacing = 4;
+                int buttonSpacing = 8;
                 int w = mFooterButtons[0]->getWidth();
                 int x = mModal.x + mModal.width - mModal.padding - w;
                 int y = mBreak2.p1.y + mModal.height.footer/2 - mFooterButtons[i]->getHeight()/2;
@@ -374,6 +374,7 @@ class ofxModalConfirm : public ofxModal {
             addButtons();
             setTheme(mTheme);
             setTitle("CONFIRM");
+            setMessage("This is a confirm message. Stumptown street art photo booth try-hard cold-pressed, pour-over raw denim four loko vinyl. Banjo drinking vinegar tousled, Brooklyn Neutra meggings mlkshk freegan whatever.");
         }
     
         void draw()
@@ -399,6 +400,10 @@ class ofxModalConfirm : public ofxModal {
             confirm->setLabelColor(theme->color.button.confirm.label);
             confirm->setBackgroundColors(theme->color.button.confirm.background,
                 theme->color.button.confirm.backgroundOnMouseOver, theme->color.button.confirm.backgroundOnMouseDown);
+            if (theme->layout.button.borders) {
+                cancel->setBorder(theme->color.button.cancel.border, 1);
+                confirm->setBorder(theme->color.button.confirm.border, 1);
+            }
         }
     
     protected:
@@ -434,5 +439,6 @@ class ofxModalConfirm : public ofxModal {
     
 
 };
+
 
 

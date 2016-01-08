@@ -27,8 +27,6 @@
 #include "ofTrueTypeFont.h"
 #include "ofxSmartFont.h"
 
-inline static ofColor hex(int n) { return ofColor::fromHex(n); }
-
 class ofxModalTheme {
 
     public:
@@ -47,40 +45,36 @@ class ofxModalTheme {
         struct{
             struct{
                 struct{
-                    ofColor label = hex(0x333333);
-                    ofColor labelOnMouseOver = hex(0x333333);
-                    ofColor labelOnMouseDown = hex(0x333333);
-                    ofColor background = hex(0xffffff);
-                    ofColor backgroundOnMouseOver = hex(0xE6E6E6);
-                    ofColor backgroundOnMouseDown = hex(0xD4D4D4);
-//                    ofColor border = hex(0x1A1A1A);
-//                    ofColor borderOnMouseOver = hex(0x777777);
-//                    ofColor borderOnMouseDown = hex(0x222222);
+                    ofColor label = ofxDatGuiTheme::hex(0x333333);
+                    ofColor labelOnMouseOver = ofxDatGuiTheme::hex(0x333333);
+                    ofColor labelOnMouseDown = ofxDatGuiTheme::hex(0x333333);
+                    ofColor background = ofxDatGuiTheme::hex(0xffffff);
+                    ofColor backgroundOnMouseOver = ofxDatGuiTheme::hex(0xE6E6E6);
+                    ofColor backgroundOnMouseDown = ofxDatGuiTheme::hex(0xD4D4D4);
+                    ofColor border = ofxDatGuiTheme::hex(0xCCCCCC);
                 } cancel;
                 struct{
-                    ofColor label = hex(0xffffff);
-                    ofColor labelOnMouseOver = hex(0xffffff);
-                    ofColor labelOnMouseDown = hex(0xffffff);
-                    ofColor background = hex(0x337ab7);
-                    ofColor backgroundOnMouseOver = hex(0x286090);
-                    ofColor backgroundOnMouseDown = hex(0x1f4c73);
-//                    ofColor border = hex(0x1A1A1A);
-//                    ofColor borderOnMouseOver = hex(0x777777);
-//                    ofColor borderOnMouseDown = hex(0x222222);
+                    ofColor label = ofxDatGuiTheme::hex(0xffffff);
+                    ofColor labelOnMouseOver = ofxDatGuiTheme::hex(0xffffff);
+                    ofColor labelOnMouseDown = ofxDatGuiTheme::hex(0xffffff);
+                    ofColor background = ofxDatGuiTheme::hex(0x337ab7);
+                    ofColor backgroundOnMouseOver = ofxDatGuiTheme::hex(0x286090);
+                    ofColor backgroundOnMouseDown = ofxDatGuiTheme::hex(0x1f4c73);
+                    ofColor border = ofxDatGuiTheme::hex(0x1f4c73);
                 } confirm;
             } button;
             struct{
-                ofColor title = hex(0x111111);
-                ofColor body = hex(0x777777);
+                ofColor title = ofxDatGuiTheme::hex(0x111111);
+                ofColor body = ofxDatGuiTheme::hex(0x777777);
             } text;
             struct{
-                ofColor header = hex(0xFFFFFF);
-                ofColor body = hex(0xFFFFFF);
-                ofColor footer = hex(0xF7F7F9);
-                ofColor hrule = hex(0x333333);
+                ofColor header = ofxDatGuiTheme::hex(0xFFFFFF);
+                ofColor body = ofxDatGuiTheme::hex(0xFFFFFF);
+                ofColor footer = ofxDatGuiTheme::hex(0xF7F7F9);
+                ofColor hrule = ofxDatGuiTheme::hex(0x333333);
             } modal;
             struct{
-                ofColor background = hex(0x000000);
+                ofColor background = ofxDatGuiTheme::hex(0x000000);
             } window;
         } color;
     
@@ -103,6 +97,7 @@ class ofxModalTheme {
             struct{
                 int width = 160;
                 int height = 80;
+                bool borders = true;
             } button;
             struct {
                 int width = 800;
