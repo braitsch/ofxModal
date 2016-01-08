@@ -9,6 +9,7 @@ void ofApp::setup()
     confirm.onModalEvent(ofxModalEvent::HIDDEN, this, &ofApp::onModalEvent);
     confirm.onModalEvent(ofxModalEvent::CANCEL, this, &ofApp::onModalEvent);
     confirm.onModalEvent(ofxModalEvent::CONFIRM, this, &ofApp::onModalEvent);
+
 }
 
 void ofApp::update() { }

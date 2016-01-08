@@ -25,6 +25,9 @@
 #include "ofColor.h"
 #include "ofGraphics.h"
 #include "ofTrueTypeFont.h"
+#include "ofxSmartFont.h"
+
+inline static ofColor hex(int n) { return ofColor::fromHex(n); }
 
 class ofxModalTheme {
 
@@ -33,46 +36,66 @@ class ofxModalTheme {
         ofxModalTheme(){
             buttons.close.btnDefault.load("ofxbraitsch/ofxmodal/modal-close.png");
             buttons.close.btnOnHover.load("ofxbraitsch/ofxmodal/modal-close-hover.png");
-        
-            fonts.title.color = ofColor::fromHex(0x111111);
-            fonts.title.load("ofxbraitsch/fonts/HelveticaNeueLTStd-Md.otf", 24);
-        
-            fonts.message.spacing = 14.0f;
-            fonts.message.color = ofColor::fromHex(0x777777);
-            fonts.message.load("ofxbraitsch/fonts/Verdana.ttf", 20);
+            fonts.title = ofxSmartFont::add("ofxbraitsch/fonts/HelveticaNeueLTStd-Md.otf", 24);
+            fonts.message = ofxSmartFont::add("ofxbraitsch/fonts/Verdana.ttf", 20);
         }
     
-        struct font{
-            int size;
-            string file;
-            ofColor color;
-            float spacing;
-            shared_ptr<ofTrueTypeFont> ttf;
-            font(){
-                ttf = make_shared<ofTrueTypeFont>();
-            }
-            void load(string f, int s){
-                file = f;
-                size = s;
-                ttf->load(file, size, true, false, true, 0.4, 92);
-            }
-            void draw(string s, int x, int y){
-                if (ttf->isLoaded()) ttf->drawString(s, x, y);
-            }
-            ofRectangle bounds(string s){
-                return ttf->getStringBoundingBox(s, 0, 0);
-            }
-            int width(string s){
-                return ttf->getStringBoundingBox(s, 0, 0).width;
-            }
-            int height(string s){
-                return ttf->getStringBoundingBox(s, 0, 0).height;
-            }
-        };
+    /*
+        default color palette
+    */
+    
+        struct{
+            struct{
+                struct{
+                    ofColor label = hex(0x1A1A1A);
+                    ofColor labelOnMouseOver = hex(0x777777);
+                    ofColor labelOnMouseDown = hex(0x222222);
+                    ofColor background = hex(0x1A1A1A);
+                    ofColor backgroundOnMouseOver = hex(0x777777);
+                    ofColor backgroundOnMouseDown = hex(0x222222);
+                    ofColor border = hex(0x1A1A1A);
+                    ofColor borderOnMouseOver = hex(0x777777);
+                    ofColor borderOnMouseDown = hex(0x222222);
+                } confirm;
+            } button;
+            struct{
+                ofColor title = hex(0x111111);
+                ofColor body = hex(0x777777);
+            } text;
+            struct{
+                ofColor header = ofColor::whiteSmoke;
+                ofColor body = ofColor::whiteSmoke;
+                ofColor footer = ofColor::whiteSmoke;
+                ofColor divider = ofColor::black;
+            } modal;
+            struct{
+                ofColor background = ofColor::black;
+            } window;
+        } color;
+    
+        struct{
+            struct{
+                int width = 140;
+                int height = 80;
+            } button;
+            struct{
+                float spacing = 14.0f;
+            } text;
+            struct{
+                float opacity = 1.0f;
+            } modal;
+            struct{
+                float opacity = 0.7f;
+            } window;
+        } layout;
+    
+    /*
+        layout, sizing and rendering rules
+    */
     
         struct {
-            font title;
-            font message;
+            shared_ptr<ofxSmartFont> title;
+            shared_ptr<ofxSmartFont> message;
         } fonts;
     
         struct {
@@ -88,7 +111,7 @@ class ofxModalTheme {
     
         struct {
             float opacity = 0.7f;
-            ofColor color = ofColor::fromHex(0x000000);
+            ofColor color = hex(0x000000);
         } background;
     
         struct {

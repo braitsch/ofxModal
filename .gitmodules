@@ -1,0 +1,9 @@
+[submodule "modules/ofxParagraph"]
+	path = modules/ofxParagraph
+	url = git@github.com:braitsch/ofxParagraph.git
+[submodule "modules/ofxSmartFont"]
+	path = modules/ofxSmartFont
+	url = git@github.com:braitsch/ofxSmartFont.git
+[submodule "modules/ofxDatGui"]
+	path = modules/ofxDatGui
+	url = git@github.com:braitsch/ofxDatGui.git

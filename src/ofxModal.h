@@ -61,7 +61,7 @@ class ofxModal {
             mModal.width = w;
             mModal.height = h;
             mModal.x = ofGetWidth() / 2 - mModal.width / 2;
-            mMessage.text.setWidth(mModal.width - (mModal.padding * 2));
+            mMessage.setWidth(mModal.width - (mModal.padding * 2));
         }
     
         void setTitle(string text)
@@ -72,9 +72,8 @@ class ofxModal {
     
         void setMessage(string text)
         {
-            mMessage.visible = true;
-            mMessage.text.setText(text);
-            mMessage.height = mMessage.text.getStringHeight();
+            mMessageVisible = true;
+            mMessage.setText(text);
         }
     
         void setTheme(std::shared_ptr<ofxModalTheme> theme, bool applyToAll = false)
@@ -94,11 +93,11 @@ class ofxModal {
                 mCloseButton.btnOnHover = &theme->buttons.close.btnOnHover;
                 mAnimation.tTicks = theme->animation.speed * ofGetFrameRate();
                 mAnimation.tOpacity = theme->background.opacity;
-                mTitle.font = &theme->fonts.title;
-                mTitle.color = theme->fonts.title.color;
-                mMessage.text.setFont(theme->fonts.message.ttf);
-                mMessage.text.setColor(theme->fonts.message.color);
-                mMessage.text.setSpacing(theme->fonts.message.spacing);
+                mTitle.font = theme->fonts.title;
+                mColor.title = theme->color.text.title;
+                mMessage.setFont(theme->fonts.message);
+                mMessage.setColor(theme->color.text.body);
+                mMessage.setSpacing(theme->layout.text.spacing);
                 mHeaderHeight = mModal.padding * 2 + mCloseButton.rect.height;
                 mFooterHeight = mModal.padding * 3;
             }
@@ -149,12 +148,12 @@ class ofxModal {
             ofSetColor(mModal.color);
             ofDrawRectangle(mModal.x, mModal.y, mModal.width, mModal.height);
         // draw title //
-            ofSetColor(mTitle.color);
+            ofSetColor(mColor.title);
             mTitle.font->draw(mTitle.text, mTitle.x, mTitle.y);
             ofDrawLine(mLine1.p1, mLine1.p2);
             ofDrawLine(mLine2.p1, mLine2.p2);
         // draw message //
-            if (mMessage.visible) mMessage.text.draw();
+            if (mMessageVisible) mMessage.draw();
         // draw close button //
             ofSetColor(ofColor::white);
             if (mCloseButton.mouseOver == false){
@@ -189,7 +188,7 @@ class ofxModal {
             mLine2.p1.y = mModal.y + mModal.height - mFooterHeight;
             mLine2.p2.x = mLine1.p2.x;
             mLine2.p2.y = mLine2.p1.y;
-            mMessage.text.setPosition(mLine1.p1.x + mModal.padding, mLine1.p1.y + mModal.padding + mMessage.height);
+            mMessage.setPosition(mLine1.p1.x + mModal.padding, mLine1.p1.y + mModal.padding + mMessage.getStringHeight());
             mCloseButton.rect.x = mModal.x + mModal.width - mModal.padding - mCloseButton.rect.width;
             mCloseButton.rect.y = mModal.y + mModal.padding;
             mCloseButton.hitRect.x = mCloseButton.rect.x - mCloseButton.hitPadding;
@@ -262,6 +261,7 @@ class ofxModal {
         bool mVisible;
         int mHeaderHeight;
         int mFooterHeight;
+        bool mMessageVisible;
     
         enum {
             HIDDEN,
@@ -269,6 +269,10 @@ class ofxModal {
             VISIBLE,
             FADING_OUT
         } mState;
+    
+        struct {
+            ofColor title;
+        } mColor;
     
         struct{
             int x;
@@ -292,20 +296,13 @@ class ofxModal {
             int y;
             int height;
             string text;
-            ofColor color;
-            ofxModalTheme::font* font;
+            shared_ptr<ofxSmartFont> font;
         } mTitle;
     
         struct{
             ofPoint p1;
             ofPoint p2;
         } mLine1;
-    
-        struct{
-            int height;
-            bool visible;
-            ofxParagraph text;
-        } mMessage;
     
         struct{
             ofPoint p1;
@@ -321,6 +318,7 @@ class ofxModal {
             ofRectangle hitRect;
         } mCloseButton;
     
+        ofxParagraph mMessage;
         vector<ofxDatGuiButton*> mFooterButtons;
     
     /*
