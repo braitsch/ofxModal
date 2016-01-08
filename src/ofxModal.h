@@ -56,12 +56,18 @@ class ofxModal {
             mAnimation.percent = 0;
         }
     
-        void setSize(int w, int h)
+        void setWidth(int w)
         {
             mModal.width = w;
-            mModal.height = h;
             mModal.x = ofGetWidth() / 2 - mModal.width / 2;
             mMessage.setWidth(mModal.width - (mModal.padding * 2));
+        }
+    
+        void setHeight(int h)
+        {
+            mModal.autoSize = false;
+            mModal.height.body = h - mModal.height.header - mModal.height.footer;
+            if (mModal.height.body < 200) mModal.height.body = 200;
         }
     
         void setTitle(string text)
@@ -72,8 +78,9 @@ class ofxModal {
     
         void setMessage(string text)
         {
-            mMessageVisible = true;
             mMessage.setText(text);
+            mMessageVisible = true;
+            if (mModal.autoSize) mModal.height.body = mMessage.getHeight() + mModal.padding * 2;
         }
     
         void setTheme(std::shared_ptr<ofxModalTheme> theme, bool applyToAll = false)
@@ -83,29 +90,34 @@ class ofxModal {
                     modals[i]->setTheme(theme, false);
                 }
             }   else{
-                mModal.color = theme->modal.color;
-                mModal.padding = theme->modal.padding;
-                setSize(theme->modal.width, theme->modal.height);
-                mCloseButton.rect.width = theme->buttons.close.width;
-                mCloseButton.rect.height = theme->buttons.close.height;
-                mCloseButton.hitPadding = theme->buttons.close.hitPadding;
-                mCloseButton.btnDefault = &theme->buttons.close.btnDefault;
-                mCloseButton.btnOnHover = &theme->buttons.close.btnOnHover;
+                mColor.header = theme->color.modal.header;
+                mColor.body = theme->color.modal.body;
+                mColor.footer = theme->color.modal.footer;
+                mColor.hrule = theme->color.modal.hrule;
+                mModal.padding = theme->layout.modal.padding;
+                mCloseButton.rect.width = theme->close_button.width;
+                mCloseButton.rect.height = theme->close_button.height;
+                mCloseButton.hitPadding = theme->close_button.hitPadding;
+                mCloseButton.normal = &theme->close_button.normal;
+                mCloseButton.active = &theme->close_button.active;
                 mAnimation.tTicks = theme->animation.speed * ofGetFrameRate();
-                mAnimation.tOpacity = theme->background.opacity;
+                mAnimation.tOpacity = theme->alpha.window.background;
                 mTitle.font = theme->fonts.title;
                 mColor.title = theme->color.text.title;
                 mMessage.setFont(theme->fonts.message);
                 mMessage.setColor(theme->color.text.body);
-                mMessage.setSpacing(theme->layout.text.spacing);
-                mHeaderHeight = mModal.padding * 2 + mCloseButton.rect.height;
-                mFooterHeight = mModal.padding * 3;
+                mMessage.setSpacing(theme->layout.text.wordSpacing);
+                mModal.height.header = mModal.padding * 2 + mCloseButton.rect.height;
+                mModal.height.footer = mModal.padding * 3;
+                mModal.height.body = theme->layout.modal.height - mModal.height.header - mModal.height.footer;
+                mModal.autoSize = theme->layout.modal.autoSize;
+                setWidth(theme->layout.modal.width);
             }
         }
     
         static bool visible();
         int getWidth() { return mModal.width; }
-        int getHeight() { return mModal.height; }
+        int getHeight() { return mModal.height.header + mModal.height.body + mModal.height.footer; }
         int getPadding() { return mModal.padding; }
     
         template<typename T, typename args, class ListenerClass>
@@ -144,22 +156,28 @@ class ofxModal {
         // draw background blackout //
             ofSetColor(0, 0, 0, mAnimation.nOpacity);
             ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
-        // draw modal background //
-            ofSetColor(mModal.color);
-            ofDrawRectangle(mModal.x, mModal.y, mModal.width, mModal.height);
+        // draw modal header //
+            ofSetColor(mColor.header);
+            ofDrawRectangle(mModal.x, mModal.y, mModal.width, mModal.height.header);
+        // draw modal body //
+            ofSetColor(mColor.body);
+            ofDrawRectangle(mModal.x, mModal.y + mModal.height.header, mModal.width, mModal.height.body);
+        // draw modal header //
+            ofSetColor(mColor.footer);
+            ofDrawRectangle(mModal.x, mModal.y + mModal.height.header + mModal.height.body, mModal.width, mModal.height.footer);
         // draw title //
             ofSetColor(mColor.title);
             mTitle.font->draw(mTitle.text, mTitle.x, mTitle.y);
-            ofDrawLine(mLine1.p1, mLine1.p2);
-            ofDrawLine(mLine2.p1, mLine2.p2);
+            ofDrawLine(mBreak1.p1, mBreak1.p2);
+            ofDrawLine(mBreak2.p1, mBreak2.p2);
         // draw message //
             if (mMessageVisible) mMessage.draw();
         // draw close button //
             ofSetColor(ofColor::white);
             if (mCloseButton.mouseOver == false){
-                mCloseButton.btnDefault->draw(mCloseButton.rect);
+                mCloseButton.normal->draw(mCloseButton.rect);
             }   else{
-                mCloseButton.btnOnHover->draw(mCloseButton.rect);
+                mCloseButton.active->draw(mCloseButton.rect);
             }
             ofPopStyle();
         // derived classes draw //
@@ -180,15 +198,15 @@ class ofxModal {
         {
             mTitle.x = mModal.x + mModal.padding;
             mTitle.y = mModal.y + mModal.padding + mCloseButton.rect.height/2 + mTitle.height/2;
-            mLine1.p1.x = mModal.x;
-            mLine1.p1.y = mModal.y + mHeaderHeight;
-            mLine1.p2.x = mModal.x + mModal.width;
-            mLine1.p2.y = mLine1.p1.y;
-            mLine2.p1.x = mLine1.p1.x;
-            mLine2.p1.y = mModal.y + mModal.height - mFooterHeight;
-            mLine2.p2.x = mLine1.p2.x;
-            mLine2.p2.y = mLine2.p1.y;
-            mMessage.setPosition(mLine1.p1.x + mModal.padding, mLine1.p1.y + mModal.padding + mMessage.getStringHeight());
+            mBreak1.p1.x = mModal.x;
+            mBreak1.p1.y = mModal.y + mModal.height.header;
+            mBreak1.p2.x = mModal.x + mModal.width;
+            mBreak1.p2.y = mBreak1.p1.y;
+            mBreak2.p1.x = mBreak1.p1.x;
+            mBreak2.p1.y = mModal.y + mModal.height.header + mModal.height.body;
+            mBreak2.p2.x = mBreak1.p2.x;
+            mBreak2.p2.y = mBreak2.p1.y;
+            mMessage.setPosition(mBreak1.p1.x + mModal.padding, mBreak1.p1.y + mModal.padding + mMessage.getStringHeight());
             mCloseButton.rect.x = mModal.x + mModal.width - mModal.padding - mCloseButton.rect.width;
             mCloseButton.rect.y = mModal.y + mModal.padding;
             mCloseButton.hitRect.x = mCloseButton.rect.x - mCloseButton.hitPadding;
@@ -199,7 +217,7 @@ class ofxModal {
                 int buttonSpacing = 4;
                 int w = mFooterButtons[0]->getWidth();
                 int x = mModal.x + mModal.width - mModal.padding - w;
-                int y = mLine2.p1.y + mFooterHeight/2 - mFooterButtons[i]->getHeight()/2;
+                int y = mBreak2.p1.y + mModal.height.footer/2 - mFooterButtons[i]->getHeight()/2;
                 x -= (w+buttonSpacing) * i;
                 mFooterButtons[i]->setPosition(x, y);
             }
@@ -213,8 +231,9 @@ class ofxModal {
             }   else if (mState == FADING_OUT) {
                 mAnimation.percent = 1.0f - easeInOutQuad(float(mAnimation.nTicks)/mAnimation.tTicks);
             }
+            int height = getHeight();
             mAnimation.nOpacity = mAnimation.percent * (mAnimation.tOpacity * 255);
-            mModal.y = -mModal.height + mAnimation.percent * (ofGetHeight()/2 - mModal.height/2 + mModal.height);
+            mModal.y = -height + mAnimation.percent * (ofGetHeight()/2 - height/2 + height);
             if (mAnimation.nTicks == mAnimation.tTicks){
                 if (mState == FADING_IN){
                     mState = VISIBLE;
@@ -235,7 +254,7 @@ class ofxModal {
         void onMousePress(ofMouseEventArgs &e)
         {
             ofPoint mouse = ofPoint(e.x, e.y);
-            if (ofRectangle(mModal.x, mModal.y, mModal.width, mModal.height).inside(mouse) == false) {
+            if (ofRectangle(mModal.x, mModal.y, mModal.width, getHeight()).inside(mouse) == false) {
                 hide();
             }   else if (mCloseButton.hitRect.inside(mouse)){
                 hide();
@@ -250,8 +269,9 @@ class ofxModal {
     
         void onWindowResize(ofResizeEventArgs &e)
         {
+            int height = getHeight();
             mModal.x = ofGetWidth() / 2 - mModal.width / 2;
-            mModal.y = -mModal.height + mAnimation.percent * (ofGetHeight()/2 - mModal.height/2 + mModal.height);
+            mModal.y = -height + mAnimation.percent * (ofGetHeight()/2 - height/2 + height);
         }
     
         double easeInOutQuad( double t ) {
@@ -259,8 +279,6 @@ class ofxModal {
         }
 
         bool mVisible;
-        int mHeaderHeight;
-        int mFooterHeight;
         bool mMessageVisible;
     
         enum {
@@ -272,15 +290,23 @@ class ofxModal {
     
         struct {
             ofColor title;
+            ofColor header;
+            ofColor body;
+            ofColor hrule;
+            ofColor footer;
         } mColor;
     
         struct{
             int x;
             int y;
             int width;
-            int height;
             int padding;
-            ofColor color;
+            struct{
+                int header;
+                int body;
+                int footer;
+            } height;
+            bool autoSize;
         } mModal;
     
         struct{
@@ -302,18 +328,18 @@ class ofxModal {
         struct{
             ofPoint p1;
             ofPoint p2;
-        } mLine1;
+        } mBreak1;
     
         struct{
             ofPoint p1;
             ofPoint p2;
-        } mLine2;
+        } mBreak2;
     
         struct {
             bool mouseOver;
             int hitPadding;
-            ofImage* btnDefault;
-            ofImage* btnOnHover;
+            ofImage* normal;
+            ofImage* active;
             ofRectangle rect;
             ofRectangle hitRect;
         } mCloseButton;
@@ -349,7 +375,7 @@ class ofxModalConfirm : public ofxModal {
 
         ofxModalConfirm()
         {
-            setSize(800, 500);
+            setWidth(800);
             setTitle("CONFIRM");
             setMessage("This is a confirm message. Stumptown street art photo booth try-hard cold-pressed, pour-over raw denim four loko vinyl. Banjo drinking vinegar tousled, Brooklyn Neutra meggings mlkshk freegan whatever.");
             addButtons();

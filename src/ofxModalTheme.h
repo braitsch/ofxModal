@@ -34,8 +34,8 @@ class ofxModalTheme {
     public:
     
         ofxModalTheme(){
-            buttons.close.btnDefault.load("ofxbraitsch/ofxmodal/modal-close.png");
-            buttons.close.btnOnHover.load("ofxbraitsch/ofxmodal/modal-close-hover.png");
+            close_button.normal.load("ofxbraitsch/ofxmodal/modal-close.png");
+            close_button.active.load("ofxbraitsch/ofxmodal/modal-close-hover.png");
             fonts.title = ofxSmartFont::add("ofxbraitsch/fonts/HelveticaNeueLTStd-Md.otf", 24);
             fonts.message = ofxSmartFont::add("ofxbraitsch/fonts/Verdana.ttf", 20);
         }
@@ -66,7 +66,7 @@ class ofxModalTheme {
                 ofColor header = ofColor::whiteSmoke;
                 ofColor body = ofColor::whiteSmoke;
                 ofColor footer = ofColor::whiteSmoke;
-                ofColor divider = ofColor::black;
+                ofColor hrule = ofColor::black;
             } modal;
             struct{
                 ofColor background = ofColor::black;
@@ -75,54 +75,51 @@ class ofxModalTheme {
     
         struct{
             struct{
+                float header = 1.0f;
+                float body = 1.0f;
+                float footer = 1.0f;
+                float hrule = 1.0f;
+            } modal;
+            struct{
+                float background = 0.7f;
+            } window;
+        } alpha;
+    
+    
+    /* postioning, width & height */
+    
+        struct{
+            struct{
                 int width = 140;
                 int height = 80;
             } button;
-            struct{
-                float spacing = 14.0f;
-            } text;
-            struct{
-                float opacity = 1.0f;
+            struct {
+                int width = 800;
+                int height = 600;
+                int padding = 30;
+                int autoSize = true;
             } modal;
             struct{
-                float opacity = 0.7f;
-            } window;
+                float wordSpacing = 14.0f;
+            } text;
         } layout;
-    
-    /*
-        layout, sizing and rendering rules
-    */
     
         struct {
             shared_ptr<ofxSmartFont> title;
             shared_ptr<ofxSmartFont> message;
         } fonts;
-    
-        struct {
-            int width = 800;
-            int height = 600;
-            int padding = 30;
-            ofColor color = ofColor::whiteSmoke;
-        } modal;
-    
+
         struct {
             float speed = 0.4f;
         } animation;
     
         struct {
-            float opacity = 0.7f;
-            ofColor color = hex(0x000000);
-        } background;
-    
-        struct {
-            struct {
-                int width = 26;
-                int height = 26;
-                int hitPadding = 20;
-                ofImage btnDefault;
-                ofImage btnOnHover;
-            } close;
-        } buttons;
+            int width = 26;
+            int height = 26;
+            int hitPadding = 20;
+            ofImage normal;
+            ofImage active;
+        } close_button;
 
 
 };
