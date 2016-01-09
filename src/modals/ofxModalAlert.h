@@ -35,16 +35,6 @@ class ofxModalAlert : public ofxModalWindow {
             setMessage("This is an alert message!");
         }
     
-        void draw()
-        {
-
-        }
-    
-        void update()
-        {
-
-        }
-    
         void setTheme(std::shared_ptr<ofxModalTheme> theme)
         {
             ofxModalWindow::setTheme(theme);

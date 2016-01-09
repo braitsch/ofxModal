@@ -23,6 +23,7 @@
 #pragma once
 #include "ofxModalAlert.h"
 #include "ofxModalConfirm.h"
+#include "ofxModalInput.h"
 
 namespace ofxModal {
 

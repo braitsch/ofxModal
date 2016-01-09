@@ -103,6 +103,7 @@ class ofxModalTheme {
                 int width = 800;
                 int height = 600;
                 int padding = 30;
+                int vMargin = 2;
                 int autoSize = true;
             } modal;
             struct{

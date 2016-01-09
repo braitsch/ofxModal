@@ -27,10 +27,48 @@ class ofxModalInput : public ofxModalWindow {
 
 
     public:
+    
         ofxModalInput()
         {
-        
+            addButton("ok");
+            setTitle("hello");
+            setTheme(mTheme);
+            addComponents();
         }
 
+        void setTheme(std::shared_ptr<ofxModalTheme> theme)
+        {
+            ofxModalWindow::setTheme(mTheme);
+            ofxDatGuiButton* b1 = getButton("ok");
+            b1->setWidth(theme->layout.button.width);
+        }
+    
+        void addComponents()
+        {
+            theme = new ofxDatGuiThemeMidnight();
+            attach(new ofxDatGuiTextInput("input-1", "placeholder"))->setTheme(theme);
+            attach(new ofxDatGuiTextInput("input-2", "placeholder"))->setTheme(theme);
+            autoSize();
+        }
+
+
+    private:
+    
+        ofxDatGuiTheme* theme;
+    
+        void onModalChange(ofxDatGuiButtonEvent e)
+        {
+            if (e.target == getButton("ok")){
+                dispatchCallbacks(ofxModalEvent::CONFIRM);
+            }
+        }
+
+        void onButtonEvent(ofxDatGuiButtonEvent e)
+        {
+            hide();
+            if (e.target == getButton("ok")){
+                dispatchCallbacks(ofxModalEvent::CONFIRM);
+            }
+        }
 
 };

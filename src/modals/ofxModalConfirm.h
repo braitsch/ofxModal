@@ -35,17 +35,7 @@ class ofxModalConfirm : public ofxModalWindow {
             setTheme(mTheme);
             setMessage("This is a confirm message. Stumptown street art photo booth try-hard cold-pressed, pour-over raw denim four loko vinyl. Banjo drinking vinegar tousled, Brooklyn Neutra meggings mlkshk freegan whatever.");
         }
-    
-        void draw()
-        {
 
-        }
-    
-        void update()
-        {
-
-        }
-    
         void setTheme(std::shared_ptr<ofxModalTheme> theme)
         {
             ofxModalWindow::setTheme(theme);

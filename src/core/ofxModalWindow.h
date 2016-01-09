@@ -106,6 +106,7 @@ class ofxModalWindow {
             mModal.height.footer = mModal.padding * 3;
             mModal.height.body = theme->layout.modal.height - mModal.height.header - mModal.height.footer;
             mModal.padding = theme->layout.modal.padding;
+            mModal.vMargin = theme->layout.modal.vMargin;
             mModal.autoSize = theme->layout.modal.autoSize;
             setWidth(theme->layout.modal.width);
         }
@@ -133,18 +134,67 @@ class ofxModalWindow {
             mCloseButton.mouseOver = false;
         }
     
-        virtual void draw() = 0;
-        virtual void update() = 0;
         virtual void onButtonEvent(ofxDatGuiButtonEvent e) = 0;
     
-        ofxDatGuiButton* addButton(string label)
+    /*
+        modal components
+    */
+    
+        struct ModalComponent{
+            int x;
+            int y;
+            ofxDatGuiComponent* component;
+            ModalComponent(ofxDatGuiComponent* c, int x, int y){
+                this->x = x;
+                this->y = y;
+                this->component = c;
+            }
+        };
+    
+        template<class component>
+        component* attach(component* c, int x = 0, int y = 0, int w = 0)
+        {
+            if (y == 0) {
+                y = mModal.padding;
+                for(auto mc:mModalComponents) y+= mc.component->getHeight() + mModal.vMargin;
+            }
+            mModalComponents.push_back(ModalComponent(c, x, y));
+            int maxW = mModal.width-(mModal.padding*2)-x;
+            if (w > 0 && w < maxW) {
+                c->setWidth(w, .3);
+            }   else{
+                c->setWidth(maxW, .3);
+            }
+            if (mModal.autoSize){
+                cout << "ok" << endl;
+                int h = mModal.padding;
+                for(auto mc:mModalComponents) h+= mc.component->getHeight() + mModal.vMargin;
+                mModal.height.body = h + mModal.padding;
+            }
+            return c;
+        }
+    
+        void autoSize()
+        {
+            for(auto mc:mModalComponents) mc.component->setWidth(mModal.width-(mModal.padding*2)-mc.x, .3);
+        }
+    
+        void autoSize(ofxDatGuiComponent* c)
+        {
+            for(auto mc:mModalComponents) if (mc.component == c) c->setWidth(mModal.width-(mModal.padding*2)-mc.x, .3);
+        }
+    
+    /*
+        footer buttons
+    */
+    
+        void addButton(string label)
         {
             ofxDatGuiButton* btn = new ofxDatGuiButton(ofToUpper(label));
             btn->setStripeVisible(false);
             btn->setLabelAlignment(ofxDatGuiAlignment::CENTER);
             btn->onButtonEvent(this, &ofxModalWindow::onButtonEvent);
             mFooterButtons.push_back(btn);
-            return btn;
         }
     
         ofxDatGuiButton* getButton(string label)
@@ -198,10 +248,10 @@ class ofxModalWindow {
                 mCloseButton.active->draw(mCloseButton.rect);
             }
             ofPopStyle();
+        // draw body components //
+            for(auto mc:mModalComponents) mc.component->draw();
         // draw footer buttons //
             for(auto button:mFooterButtons) button->draw();
-        // derived classes draw //
-            draw();
         }
     
         void onUpdate(ofEventArgs &e)
@@ -209,9 +259,9 @@ class ofxModalWindow {
             if (mState == FADING_IN || mState == FADING_OUT){
                 animate();
             }   else{
-                update();
-            // update footer buttons //
-                for(auto button:mFooterButtons) button->update();
+            // update modal components //
+                for(auto bn:mFooterButtons) bn->update();
+                for(auto mc:mModalComponents) mc.component->update();
             }
         }
     
@@ -234,6 +284,9 @@ class ofxModalWindow {
             mCloseButton.hitRect.y = mCloseButton.rect.y - mCloseButton.hitPadding;
             mCloseButton.hitRect.width = mCloseButton.rect.width + (mCloseButton.hitPadding * 2);
             mCloseButton.hitRect.height = mCloseButton.rect.height + (mCloseButton.hitPadding * 2);
+            for(auto mc:mModalComponents) {
+                mc.component->setPosition(mModal.x + mModal.padding + mc.x, mModal.y + mModal.height.header + mc.y);
+            }
             for(int i=0; i<mFooterButtons.size(); i++){
                 int buttonSpacing = 8;
                 int w = mFooterButtons[0]->getWidth();
@@ -324,6 +377,7 @@ class ofxModalWindow {
             int y;
             int width;
             int padding;
+            int vMargin;
             struct{
                 int header;
                 int body;
@@ -368,6 +422,7 @@ class ofxModalWindow {
         } mCloseButton;
     
         ofxParagraph mMessage;
+        vector<ModalComponent> mModalComponents;
         vector<ofxDatGuiButton*> mFooterButtons;
     
     /*
