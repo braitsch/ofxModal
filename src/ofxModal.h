@@ -27,7 +27,7 @@
 
 namespace ofxModal {
 
-    bool visible()
+    static bool visible()
     {
         return ofxModalWindow::visible();
     }

@@ -348,6 +348,7 @@ class ofxModalWindow {
             int height = getHeight();
             mModal.x = ofGetWidth() / 2 - mModal.width / 2;
             mModal.y = -height + mAnimation.percent * (ofGetHeight()/2 - height/2 + height);
+            layout();
         }
     
         double easeInOutQuad( double t ) {
