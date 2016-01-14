@@ -35,6 +35,7 @@ class ofxModalWindow {
         {
         // ensure we never show two at the same time //
             if (activeModal == nullptr){
+                centerModal();
                 mVisible = true;
                 activeModal = this;
                 mState = FADING_IN;
@@ -166,7 +167,6 @@ class ofxModalWindow {
                 c->setWidth(maxW, .3);
             }
             if (mModal.autoSize){
-                cout << "ok" << endl;
                 int h = mModal.padding;
                 for(auto mc:mModalComponents) h+= mc.component->getHeight() + mModal.vMargin;
                 mModal.height.body = h + mModal.padding;
@@ -188,21 +188,14 @@ class ofxModalWindow {
         footer buttons
     */
     
-        void addButton(string label)
+        ofxDatGuiButton* addButton(string label)
         {
             ofxDatGuiButton* btn = new ofxDatGuiButton(ofToUpper(label));
             btn->setStripeVisible(false);
             btn->setLabelAlignment(ofxDatGuiAlignment::CENTER);
             btn->onButtonEvent(this, &ofxModalWindow::onButtonEvent);
             mFooterButtons.push_back(btn);
-        }
-    
-        ofxDatGuiButton* getButton(string label)
-        {
-            for (auto button:mFooterButtons){
-                if (button->is(label)) return button;
-            }
-            return nullptr;
+            return btn;
         }
     
         void dispatchCallbacks(ofxModalEvent::EventType eType)
@@ -327,6 +320,14 @@ class ofxModalWindow {
             layout();
         }
     
+        void centerModal()
+        {
+            int height = getHeight();
+            mModal.x = ofGetWidth() / 2 - mModal.width / 2;
+            mModal.y = -height + mAnimation.percent * (ofGetHeight()/2 - height/2 + height);
+            layout();
+        }
+    
         void onMousePress(ofMouseEventArgs &e)
         {
             ofPoint mouse = ofPoint(e.x, e.y);
@@ -345,10 +346,7 @@ class ofxModalWindow {
     
         void onWindowResize(ofResizeEventArgs &e)
         {
-            int height = getHeight();
-            mModal.x = ofGetWidth() / 2 - mModal.width / 2;
-            mModal.y = -height + mAnimation.percent * (ofGetHeight()/2 - height/2 + height);
-            layout();
+            centerModal();
         }
     
         double easeInOutQuad( double t ) {

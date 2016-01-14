@@ -29,32 +29,35 @@ class ofxModalAlert : public ofxModalWindow {
 
         ofxModalAlert()
         {
-            addButton("ok");
-            setTheme(mTheme);
             setTitle("alert");
+            mActionButton = addButton("ok");
+            setTheme(mTheme);
             setMessage("This is an alert message!");
         }
     
         void setTheme(std::shared_ptr<ofxModalTheme> theme)
         {
             ofxModalWindow::setTheme(theme);
-            ofxDatGuiButton* b1 = getButton("ok");
-            b1->setWidth(theme->layout.button.width);
-            b1->setLabelColor(theme->color.button.wireframe.label);
-            b1->setBackgroundColors(theme->color.button.wireframe.background,
+            mActionButton->setWidth(theme->layout.button.width);
+            mActionButton->setLabelColor(theme->color.button.wireframe.label);
+            mActionButton->setBackgroundColors(theme->color.button.wireframe.background,
                 theme->color.button.wireframe.backgroundOnMouseOver,
                 theme->color.button.wireframe.backgroundOnMouseDown);
             if (theme->layout.button.borders) {
-                b1->setBorder(theme->color.button.wireframe.border, 1);
+                mActionButton->setBorder(theme->color.button.wireframe.border, 1);
             }
         }
+    
+    protected:
+    
+        ofxDatGuiButton* mActionButton;
     
     private:
     
         void onButtonEvent(ofxDatGuiButtonEvent e)
         {
             hide();
-            if (e.target == getButton("ok")){
+            if (e.target == mActionButton){
                 dispatchCallbacks(ofxModalEvent::CONFIRM);
             }
         }

@@ -23,24 +23,22 @@
 #pragma once
 #include "ofxModalWindow.h"
 
-class ofxModalInput : public ofxModalWindow {
+class ofxModalInput : public ofxModalConfirm {
 
 
     public:
     
         ofxModalInput()
         {
-            addButton("ok");
             setTitle("hello");
             setTheme(mTheme);
+            setMessage("");
             addComponents();
         }
 
         void setTheme(std::shared_ptr<ofxModalTheme> theme)
         {
-            ofxModalWindow::setTheme(mTheme);
-            ofxDatGuiButton* b1 = getButton("ok");
-            b1->setWidth(theme->layout.button.width);
+            ofxModalConfirm::setTheme(mTheme);
         }
     
         void addComponents()
@@ -56,19 +54,11 @@ class ofxModalInput : public ofxModalWindow {
     
         ofxDatGuiTheme* theme;
     
-        void onModalChange(ofxDatGuiButtonEvent e)
-        {
-            if (e.target == getButton("ok")){
-                dispatchCallbacks(ofxModalEvent::CONFIRM);
-            }
-        }
-
-        void onButtonEvent(ofxDatGuiButtonEvent e)
-        {
-            hide();
-            if (e.target == getButton("ok")){
-                dispatchCallbacks(ofxModalEvent::CONFIRM);
-            }
-        }
+//        void onModalChange(ofxDatGuiButtonEvent e)
+//        {
+//            if (e.target == mActionButton){
+//                dispatchCallbacks(ofxModalEvent::CONFIRM);
+//            }
+//        }
 
 };

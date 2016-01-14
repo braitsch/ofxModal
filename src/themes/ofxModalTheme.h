@@ -24,7 +24,6 @@
 #include "ofImage.h"
 #include "ofColor.h"
 #include "ofGraphics.h"
-#include "ofTrueTypeFont.h"
 #include "ofxSmartFont.h"
 
 class ofxModalTheme {
