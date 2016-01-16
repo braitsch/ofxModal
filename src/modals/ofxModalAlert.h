@@ -35,6 +35,16 @@ class ofxModalAlert : public ofxModalWindow {
             setMessage("This is an alert message!");
         }
     
+        void show(string message)
+        {
+            setMessage(message);
+            if (ofxModalWindow::visible()){
+                mAlert = this;
+            }   else{
+                ofxModalWindow::show();
+            }
+        }
+    
         void setTheme(std::shared_ptr<ofxModalTheme> theme)
         {
             ofxModalWindow::setTheme(theme);

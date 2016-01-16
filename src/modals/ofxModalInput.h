@@ -31,34 +31,14 @@ class ofxModalInput : public ofxModalConfirm {
         ofxModalInput()
         {
             setTitle("hello");
-            setTheme(mTheme);
             setMessage("");
-            addComponents();
+            setTheme(mTheme);
         }
 
         void setTheme(std::shared_ptr<ofxModalTheme> theme)
         {
             ofxModalConfirm::setTheme(mTheme);
         }
-    
-        void addComponents()
-        {
-            theme = new ofxDatGuiThemeMidnight();
-            attach(new ofxDatGuiTextInput("input-1", "placeholder"))->setTheme(theme);
-            attach(new ofxDatGuiTextInput("input-2", "placeholder"))->setTheme(theme);
-            autoSize();
-        }
 
-
-    private:
-    
-        ofxDatGuiTheme* theme;
-    
-//        void onModalChange(ofxDatGuiButtonEvent e)
-//        {
-//            if (e.target == mActionButton){
-//                dispatchCallbacks(ofxModalEvent::CONFIRM);
-//            }
-//        }
 
 };

@@ -205,8 +205,13 @@ class ofxModalWindow {
                     s.callback(ofxModalEvent(eType, this));
                 }
             }
+            if (eType == ofxModalEvent::HIDDEN && mAlert != nullptr){
+                mAlert->show();
+                mAlert = nullptr;
+            }
         }
     
+        static ofxModalWindow* mAlert;
         static std::shared_ptr<ofxModalTheme> mTheme;
 
     private:
@@ -214,32 +219,33 @@ class ofxModalWindow {
         void onDraw(ofEventArgs &e)
         {
             ofPushStyle();
-        // draw background blackout //
-            ofSetColor(0, 0, 0, mAnimation.nOpacity);
-            ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
-        // draw modal header //
-            ofSetColor(mColor.header);
-            ofDrawRectangle(mModal.x, mModal.y, mModal.width, mModal.height.header);
-        // draw modal body //
-            ofSetColor(mColor.body);
-            ofDrawRectangle(mModal.x, mModal.y + mModal.height.header, mModal.width, mModal.height.body);
-        // draw modal header //
-            ofSetColor(mColor.footer);
-            ofDrawRectangle(mModal.x, mModal.y + mModal.height.header + mModal.height.body, mModal.width, mModal.height.footer);
-        // draw title //
-            ofSetColor(mColor.title);
-            mTitle.font->draw(mTitle.text, mTitle.x, mTitle.y);
-            ofDrawLine(mBreak1.p1, mBreak1.p2);
-            ofDrawLine(mBreak2.p1, mBreak2.p2);
-        // draw message //
-            if (mMessageVisible) mMessage.draw();
-        // draw close button //
-            ofSetColor(ofColor::white);
-            if (mCloseButton.mouseOver == false){
-                mCloseButton.normal->draw(mCloseButton.rect);
-            }   else{
-                mCloseButton.active->draw(mCloseButton.rect);
-            }
+                ofFill();
+            // draw background blackout //
+                ofSetColor(0, 0, 0, mAnimation.nOpacity);
+                ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+            // draw modal header //
+                ofSetColor(mColor.header);
+                ofDrawRectangle(mModal.x, mModal.y, mModal.width, mModal.height.header);
+            // draw modal body //
+                ofSetColor(mColor.body);
+                ofDrawRectangle(mModal.x, mModal.y + mModal.height.header, mModal.width, mModal.height.body);
+            // draw modal header //
+                ofSetColor(mColor.footer);
+                ofDrawRectangle(mModal.x, mModal.y + mModal.height.header + mModal.height.body, mModal.width, mModal.height.footer);
+            // draw title //
+                ofSetColor(mColor.title);
+                mTitle.font->draw(mTitle.text, mTitle.x, mTitle.y);
+                ofDrawLine(mBreak1.p1, mBreak1.p2);
+                ofDrawLine(mBreak2.p1, mBreak2.p2);
+            // draw message //
+                if (mMessageVisible) mMessage.draw();
+            // draw close button //
+                ofSetColor(ofColor::white);
+                if (mCloseButton.mouseOver == false){
+                    mCloseButton.normal->draw(mCloseButton.rect);
+                }   else{
+                    mCloseButton.active->draw(mCloseButton.rect);
+                }
             ofPopStyle();
         // draw body components //
             for(auto mc:mModalComponents) mc.component->draw();

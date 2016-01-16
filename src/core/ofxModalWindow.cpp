@@ -23,5 +23,6 @@
 #include "ofxModalWindow.h"
 
 vector<ofxModalWindow*> ofxModalWindow::modals;
+ofxModalWindow* ofxModalWindow::mAlert = nullptr;
 ofxModalWindow* ofxModalWindow::activeModal = nullptr;
 std::shared_ptr<ofxModalTheme> ofxModalWindow::mTheme = nullptr;
