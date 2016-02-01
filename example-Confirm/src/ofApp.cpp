@@ -11,6 +11,8 @@ void ofApp::setup()
     confirm.onModalEvent(ofxModalEvent::CONFIRM, this, &ofApp::onModalEvent);
     
 // bring the magic //
+    confirm.setWidth(850);
+    confirm.setMessage("press 'h' to hide this window, press 'm' to show it.");
     confirm.show();
 }
 

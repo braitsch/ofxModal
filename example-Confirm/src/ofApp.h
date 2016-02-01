@@ -11,7 +11,7 @@ class ofApp : public ofBaseApp{
         void draw();
         void keyPressed(int key);
     
-        ofxModalInput confirm;
+        ofxModalConfirm confirm;
         void onModalEvent(ofxModalEvent e);
 		
 };

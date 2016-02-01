@@ -26,7 +26,138 @@ vector<ofxModalWindow*> ofxModalWindow::modals;
 ofxModalWindow* ofxModalWindow::activeModal = nullptr;
 std::shared_ptr<ofxModalTheme> ofxModalWindow::mTheme = nullptr;
 
-// http://stackoverflow.com/a/19962920/228315
+/*
+    pubic methods
+*/
+
+void ofxModalWindow::show()
+{
+// ensure we never show two at the same time //
+    if (activeModal == nullptr){
+        centerModal();
+        mVisible = true;
+        activeModal = this;
+        mState = FADING_IN;
+        mAnimation.nTicks = 0;
+        mAnimation.percent = 0;
+        ofAddListener(ofEvents().draw, this, &ofxModalWindow::onDraw);
+        ofAddListener(ofEvents().update, this, &ofxModalWindow::onUpdate);
+        ofAddListener(ofEvents().mouseMoved, this, &ofxModalWindow::onMouseMove);
+        ofAddListener(ofEvents().mousePressed, this, &ofxModalWindow::onMousePress);
+        ofAddListener(ofEvents().windowResized, this, &ofxModalWindow::onWindowResize);
+    }
+}
+
+void ofxModalWindow::hide()
+{
+    mVisible = true;
+    mState = FADING_OUT;
+    mAnimation.nTicks = 0;
+    mAnimation.percent = 0;
+}
+
+void ofxModalWindow::alert(string message)
+{
+    mAlertMessage = message;
+}
+
+
+void ofxModalWindow::setWidth(int w)
+{
+    mModal.width = w;
+    mModal.x = ofGetWidth() / 2 - mModal.width / 2;
+    mMessage->setWidth(mModal.width - (mModal.padding * 2));
+}
+
+void ofxModalWindow::setHeight(int h)
+{
+    mModal.autoSize = false;
+    mModal.height.body = h - mModal.height.header - mModal.height.footer;
+// establish a minimun body height //
+    if (mModal.height.body < 200) mModal.height.body = 200;
+}
+
+void ofxModalWindow::setTitle(string text)
+{
+    mTitle.text = ofToUpper(text);
+    mTitle.height = mTitle.font->height(mTitle.text);
+}
+
+void ofxModalWindow::setMessage(string text)
+{
+    mMessage->setText(text);
+    mMessageVisible = true;
+    if (mModal.autoSize) mModal.height.body = mMessage->getHeight() + mModal.padding * 2;
+}
+
+void ofxModalWindow::setAlert(shared_ptr<ofxModalAlert> alert)
+{
+    mAlert = alert;
+}
+
+void ofxModalWindow::setTheme(std::shared_ptr<ofxModalTheme> theme)
+{
+    mColor.title = theme->color.text.title;
+    mColor.header = theme->color.modal.header;
+    mColor.body = theme->color.modal.body;
+    mColor.footer = theme->color.modal.footer;
+    mColor.hrule = theme->color.modal.hrule;
+    mCloseButton.normal = &theme->close_button.normal;
+    mCloseButton.active = &theme->close_button.active;
+    mCloseButton.rect.width = theme->close_button.width;
+    mCloseButton.rect.height = theme->close_button.height;
+    mCloseButton.hitPadding = theme->close_button.hitPadding;
+    mAnimation.tTicks = theme->animation.speed * ofGetFrameRate();
+    mAnimation.tOpacity = theme->alpha.window.background;
+    mTitle.font = theme->fonts.title;
+    mMessage->setFont(theme->fonts.message);
+    mMessage->setColor(theme->color.text.body);
+    mMessage->setSpacing(theme->layout.text.wordSpacing);
+    mModal.height.header = mModal.padding * 2 + mCloseButton.rect.height;
+    mModal.height.footer = mModal.padding * 3;
+    mModal.height.body = theme->layout.modal.height - mModal.height.header - mModal.height.footer;
+    mModal.padding = theme->layout.modal.padding;
+    mModal.vMargin = theme->layout.modal.vMargin;
+    mModal.autoSize = theme->layout.modal.autoSize;
+    setWidth(theme->layout.modal.width);
+}
+
+
+int ofxModalWindow::getWidth()
+{
+    return mModal.width;
+}
+
+int ofxModalWindow::getHeight()
+{
+    return mModal.height.header + mModal.height.body + mModal.height.footer;
+}
+
+int ofxModalWindow::getPadding()
+{
+    return mModal.padding;
+}
+
+bool ofxModalWindow::visible()
+{
+    return activeModal != nullptr;
+}
+
+/*
+    protected methods
+*/
+
+ofxModalWindow::ofxModalWindow()
+{
+    mAlert = nullptr;
+    mAlertMessage = "";
+    modals.push_back(this);
+    mMessage = new ofxParagraph();
+    if (mTheme == nullptr) mTheme = std::make_shared<ofxModalTheme>();
+    setTheme(mTheme);
+    mCloseButton.mouseOver = false;
+}
+
 
 void ofxModalWindow::dispatchCallbacks(ofxModalEvent::EventType eType)
 {
@@ -42,3 +173,155 @@ void ofxModalWindow::dispatchCallbacks(ofxModalEvent::EventType eType)
         }
     }
 }
+
+/*
+    private methods
+*/
+
+void ofxModalWindow::onDraw(ofEventArgs &e)
+{
+    ofPushStyle();
+        ofFill();
+    // draw background blackout //
+        ofSetColor(0, 0, 0, mAnimation.nOpacity);
+        ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+    // draw modal header //
+        ofSetColor(mColor.header);
+        ofDrawRectangle(mModal.x, mModal.y, mModal.width, mModal.height.header);
+    // draw modal body //
+        ofSetColor(mColor.body);
+        ofDrawRectangle(mModal.x, mModal.y + mModal.height.header, mModal.width, mModal.height.body);
+    // draw modal header //
+        ofSetColor(mColor.footer);
+        ofDrawRectangle(mModal.x, mModal.y + mModal.height.header + mModal.height.body, mModal.width, mModal.height.footer);
+    // draw title //
+        ofSetColor(mColor.title);
+        mTitle.font->draw(mTitle.text, mTitle.x, mTitle.y);
+        ofDrawLine(mBreak1.p1, mBreak1.p2);
+        ofDrawLine(mBreak2.p1, mBreak2.p2);
+    // draw message //
+        if (mMessageVisible) mMessage->draw();
+    // draw close button //
+        ofSetColor(ofColor::white);
+        if (mCloseButton.mouseOver == false){
+            mCloseButton.normal->draw(mCloseButton.rect);
+        }   else{
+            mCloseButton.active->draw(mCloseButton.rect);
+        }
+    ofPopStyle();
+// draw body components //
+    for(auto mc:mModalComponents) mc.component->draw();
+// draw footer buttons //
+    for(auto button:mFooterButtons) button->draw();
+}
+
+void ofxModalWindow::onUpdate(ofEventArgs &e)
+{
+    if (mState == FADING_IN || mState == FADING_OUT){
+        animate();
+    }   else{
+    // update modal components //
+        for(auto bn:mFooterButtons) bn->update();
+        for(auto mc:mModalComponents) mc.component->update();
+    }
+}
+
+void ofxModalWindow::layout()
+{
+    mTitle.x = mModal.x + mModal.padding;
+    mTitle.y = mModal.y + mModal.padding + mCloseButton.rect.height/2 + mTitle.height/2;
+    mBreak1.p1.x = mModal.x;
+    mBreak1.p1.y = mModal.y + mModal.height.header;
+    mBreak1.p2.x = mModal.x + mModal.width;
+    mBreak1.p2.y = mBreak1.p1.y;
+    mBreak2.p1.x = mBreak1.p1.x;
+    mBreak2.p1.y = mModal.y + mModal.height.header + mModal.height.body;
+    mBreak2.p2.x = mBreak1.p2.x;
+    mBreak2.p2.y = mBreak2.p1.y;
+    mMessage->setPosition(mBreak1.p1.x + mModal.padding, mBreak1.p1.y + mModal.padding + mMessage->getStringHeight());
+    mCloseButton.rect.x = mModal.x + mModal.width - mModal.padding - mCloseButton.rect.width;
+    mCloseButton.rect.y = mModal.y + mModal.padding;
+    mCloseButton.hitRect.x = mCloseButton.rect.x - mCloseButton.hitPadding;
+    mCloseButton.hitRect.y = mCloseButton.rect.y - mCloseButton.hitPadding;
+    mCloseButton.hitRect.width = mCloseButton.rect.width + (mCloseButton.hitPadding * 2);
+    mCloseButton.hitRect.height = mCloseButton.rect.height + (mCloseButton.hitPadding * 2);
+    for(auto mc:mModalComponents) {
+        mc.component->setPosition(mModal.x + mModal.padding + mc.x, mModal.y + mModal.height.header + mc.y);
+    }
+    for(int i=0; i<mFooterButtons.size(); i++){
+        int buttonSpacing = 8;
+        int w = mFooterButtons[0]->getWidth();
+        int x = mModal.x + mModal.width - mModal.padding - w;
+        int y = mBreak2.p1.y + mModal.height.footer/2 - mFooterButtons[i]->getHeight()/2;
+        x -= (w+buttonSpacing) * i;
+        mFooterButtons[i]->setPosition(x, y);
+    }
+}
+
+void ofxModalWindow::animate()
+{
+    mAnimation.nTicks++;
+    if (mState == FADING_IN){
+        mAnimation.percent = easeInOutQuad(float(mAnimation.nTicks)/mAnimation.tTicks);
+    }   else if (mState == FADING_OUT) {
+        mAnimation.percent = 1.0f - easeInOutQuad(float(mAnimation.nTicks)/mAnimation.tTicks);
+    }
+    int height = getHeight();
+    mAnimation.nOpacity = mAnimation.percent * (mAnimation.tOpacity * 255);
+    mModal.y = -height + mAnimation.percent * (ofGetHeight()/2 - height/2 + height);
+    if (mAnimation.nTicks == mAnimation.tTicks){
+        if (mState == FADING_IN){
+            mState = VISIBLE;
+            dispatchCallbacks(ofxModalEvent::SHOWN);
+        }   else if (mState == FADING_OUT){
+            mState = HIDDEN;
+        // modal is closed, ok to show another one now //
+            activeModal = nullptr;
+            dispatchCallbacks(ofxModalEvent::HIDDEN);
+            ofRemoveListener(ofEvents().draw, this, &ofxModalWindow::onDraw);
+            ofRemoveListener(ofEvents().update, this, &ofxModalWindow::onUpdate);
+            ofRemoveListener(ofEvents().mouseMoved, this, &ofxModalWindow::onMouseMove);
+            ofRemoveListener(ofEvents().mousePressed, this, &ofxModalWindow::onMousePress);
+        }
+    }
+// sync modal components as window moves //
+    layout();
+}
+
+void ofxModalWindow::centerModal()
+{
+    int height = getHeight();
+    mModal.x = ofGetWidth() / 2 - mModal.width / 2;
+    mModal.y = -height + mAnimation.percent * (ofGetHeight()/2 - height/2 + height);
+    layout();
+}
+
+void ofxModalWindow::onMousePress(ofMouseEventArgs &e)
+{
+    ofPoint mouse = ofPoint(e.x, e.y);
+    if (ofRectangle(mModal.x, mModal.y, mModal.width, getHeight()).inside(mouse) == false) {
+        hide();
+    }   else if (mCloseButton.hitRect.inside(mouse)){
+        hide();
+    }
+}
+
+void ofxModalWindow::onMouseMove(ofMouseEventArgs &e)
+{
+    ofPoint mouse = ofPoint(e.x, e.y);
+    mCloseButton.mouseOver = mCloseButton.hitRect.inside(mouse);
+}
+
+void ofxModalWindow::onWindowResize(ofResizeEventArgs &e)
+{
+    centerModal();
+}
+
+double ofxModalWindow::easeInOutQuad( double t )
+{
+    return t < 0.5 ? 2 * t * t : t * (4 - 2 * t) - 1;
+}
+
+
+
+
