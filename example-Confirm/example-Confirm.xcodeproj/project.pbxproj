@@ -50,7 +50,6 @@
 		8A7333341C40718C00609E8A /* ofxModalEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxModalEvent.h; sourceTree = "<group>"; };
 		8A7333351C40718C00609E8A /* ofxModalWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxModalWindow.cpp; sourceTree = "<group>"; };
 		8A7333361C40718C00609E8A /* ofxModalWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxModalWindow.h; sourceTree = "<group>"; };
-		8A7333381C40718C00609E8A /* ofxModalAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxModalAlert.h; sourceTree = "<group>"; };
 		8A7333391C40718C00609E8A /* ofxModalConfirm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxModalConfirm.h; sourceTree = "<group>"; };
 		8A73333A1C40718C00609E8A /* ofxModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxModal.h; sourceTree = "<group>"; };
 		8A73333C1C40718C00609E8A /* ofxModalTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxModalTheme.h; sourceTree = "<group>"; };
@@ -115,7 +114,6 @@
 		8A7333371C40718C00609E8A /* modals */ = {
 			isa = PBXGroup;
 			children = (
-				8A7333381C40718C00609E8A /* ofxModalAlert.h */,
 				8A73333E1C4072A000609E8A /* ofxModalInput.h */,
 				8A7333391C40718C00609E8A /* ofxModalConfirm.h */,
 			);

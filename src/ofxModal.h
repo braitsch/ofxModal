@@ -21,15 +21,25 @@
 */
 
 #pragma once
-#include "ofxModalAlert.h"
 #include "ofxModalConfirm.h"
 #include "ofxModalInput.h"
 
-namespace ofxModal {
+class ofxModal {
 
-    static bool visible()
-    {
-        return ofxModalWindow::visible();
-    }
+    public:
+
+        static void alert(string message)
+        {
+        
+        }
+
+        static bool visible()
+        {
+            return ofxModalWindow::visible();
+        }
     
-}
+    
+    private:
+        ofxModalAlert mAlert;
+    
+};

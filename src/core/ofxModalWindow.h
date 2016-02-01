@@ -27,6 +27,8 @@
 #include "ofxModalEvent.h"
 #include "ofxModalTheme.h"
 
+class ofxModalAlert;
+
 class ofxModalWindow {
     
     public:
@@ -57,11 +59,16 @@ class ofxModalWindow {
             mAnimation.percent = 0;
         }
     
+        void alert(string message)
+        {
+            mAlertMessage = message;
+        }
+    
         void setWidth(int w)
         {
             mModal.width = w;
             mModal.x = ofGetWidth() / 2 - mModal.width / 2;
-            mMessage.setWidth(mModal.width - (mModal.padding * 2));
+            mMessage->setWidth(mModal.width - (mModal.padding * 2));
         }
     
         void setHeight(int h)
@@ -80,9 +87,14 @@ class ofxModalWindow {
     
         void setMessage(string text)
         {
-            mMessage.setText(text);
+            mMessage->setText(text);
             mMessageVisible = true;
-            if (mModal.autoSize) mModal.height.body = mMessage.getHeight() + mModal.padding * 2;
+            if (mModal.autoSize) mModal.height.body = mMessage->getHeight() + mModal.padding * 2;
+        }
+    
+        void setAlert(shared_ptr<ofxModalAlert> alert)
+        {
+            mAlert = alert;
         }
     
         virtual void setTheme(std::shared_ptr<ofxModalTheme> theme)
@@ -100,9 +112,9 @@ class ofxModalWindow {
             mAnimation.tTicks = theme->animation.speed * ofGetFrameRate();
             mAnimation.tOpacity = theme->alpha.window.background;
             mTitle.font = theme->fonts.title;
-            mMessage.setFont(theme->fonts.message);
-            mMessage.setColor(theme->color.text.body);
-            mMessage.setSpacing(theme->layout.text.wordSpacing);
+            mMessage->setFont(theme->fonts.message);
+            mMessage->setColor(theme->color.text.body);
+            mMessage->setSpacing(theme->layout.text.wordSpacing);
             mModal.height.header = mModal.padding * 2 + mCloseButton.rect.height;
             mModal.height.footer = mModal.padding * 3;
             mModal.height.body = theme->layout.modal.height - mModal.height.header - mModal.height.footer;
@@ -129,7 +141,11 @@ class ofxModalWindow {
     
         ofxModalWindow()
         {
+            mQueue = false;
             modals.push_back(this);
+            mAlert = nullptr;
+            mAlertMessage = "";
+            mMessage = new ofxParagraph();
             if (mTheme == nullptr) mTheme = std::make_shared<ofxModalTheme>();
             setTheme(mTheme);
             mCloseButton.mouseOver = false;
@@ -198,20 +214,11 @@ class ofxModalWindow {
             return btn;
         }
     
-        void dispatchCallbacks(ofxModalEvent::EventType eType)
-        {
-            for(auto s: subscribers){
-                if (s.eType == eType){
-                    s.callback(ofxModalEvent(eType, this));
-                }
-            }
-            if (eType == ofxModalEvent::HIDDEN && mAlert != nullptr){
-                mAlert->show();
-                mAlert = nullptr;
-            }
-        }
+        void dispatchCallbacks(ofxModalEvent::EventType eType);
     
-        static ofxModalWindow* mAlert;
+        bool mQueue;
+        string mAlertMessage;
+        shared_ptr<ofxModalAlert> mAlert;
         static std::shared_ptr<ofxModalTheme> mTheme;
 
     private:
@@ -238,7 +245,7 @@ class ofxModalWindow {
                 ofDrawLine(mBreak1.p1, mBreak1.p2);
                 ofDrawLine(mBreak2.p1, mBreak2.p2);
             // draw message //
-                if (mMessageVisible) mMessage.draw();
+                if (mMessageVisible) mMessage->draw();
             // draw close button //
                 ofSetColor(ofColor::white);
                 if (mCloseButton.mouseOver == false){
@@ -276,7 +283,7 @@ class ofxModalWindow {
             mBreak2.p1.y = mModal.y + mModal.height.header + mModal.height.body;
             mBreak2.p2.x = mBreak1.p2.x;
             mBreak2.p2.y = mBreak2.p1.y;
-            mMessage.setPosition(mBreak1.p1.x + mModal.padding, mBreak1.p1.y + mModal.padding + mMessage.getStringHeight());
+            mMessage->setPosition(mBreak1.p1.x + mModal.padding, mBreak1.p1.y + mModal.padding + mMessage->getStringHeight());
             mCloseButton.rect.x = mModal.x + mModal.width - mModal.padding - mCloseButton.rect.width;
             mCloseButton.rect.y = mModal.y + mModal.padding;
             mCloseButton.hitRect.x = mCloseButton.rect.x - mCloseButton.hitPadding;
@@ -426,7 +433,7 @@ class ofxModalWindow {
             ofRectangle hitRect;
         } mCloseButton;
     
-        ofxParagraph mMessage;
+        ofxParagraph* mMessage;
         vector<ModalComponent> mModalComponents;
         vector<ofxDatGuiButton*> mFooterButtons;
     
@@ -447,6 +454,56 @@ class ofxModalWindow {
     
         static ofxModalWindow* activeModal;
         static vector<ofxModalWindow*> modals;
+
     
 };
+
+class ofxModalAlert : public ofxModalWindow {
+
+    public:
+
+        ofxModalAlert()
+        {
+            setTitle("alert");
+            mActionButton = addButton("ok");
+            setTheme(mTheme);
+            setMessage("This is an alert message!");
+        }
+    
+        void show(string message)
+        {
+            setMessage(message);
+            ofxModalWindow::show();
+        }
+    
+        void setTheme(std::shared_ptr<ofxModalTheme> theme)
+        {
+            ofxModalWindow::setTheme(theme);
+            mActionButton->setWidth(theme->layout.button.width);
+            mActionButton->setLabelColor(theme->color.button.wireframe.label);
+            mActionButton->setBackgroundColors(theme->color.button.wireframe.background,
+                theme->color.button.wireframe.backgroundOnMouseOver,
+                theme->color.button.wireframe.backgroundOnMouseDown);
+            if (theme->layout.button.borders) {
+                mActionButton->setBorder(theme->color.button.wireframe.border, 1);
+            }
+        }
+    
+    protected:
+    
+        ofxDatGuiButton* mActionButton;
+    
+    private:
+    
+        void onButtonEvent(ofxDatGuiButtonEvent e)
+        {
+            hide();
+            if (e.target == mActionButton){
+                dispatchCallbacks(ofxModalEvent::CONFIRM);
+            }
+        }
+
+};
+
+
 

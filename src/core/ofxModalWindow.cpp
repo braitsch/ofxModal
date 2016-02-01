@@ -23,6 +23,22 @@
 #include "ofxModalWindow.h"
 
 vector<ofxModalWindow*> ofxModalWindow::modals;
-ofxModalWindow* ofxModalWindow::mAlert = nullptr;
 ofxModalWindow* ofxModalWindow::activeModal = nullptr;
 std::shared_ptr<ofxModalTheme> ofxModalWindow::mTheme = nullptr;
+
+// http://stackoverflow.com/a/19962920/228315
+
+void ofxModalWindow::dispatchCallbacks(ofxModalEvent::EventType eType)
+{
+    for(auto s: subscribers){
+        if (s.eType == eType){
+            s.callback(ofxModalEvent(eType, this));
+        }
+    }
+    if (eType == ofxModalEvent::HIDDEN){
+        if (mAlertMessage != ""){
+            if (mAlert != nullptr) mAlert->show(mAlertMessage);
+            mAlertMessage = "";
+        }
+    }
+}
