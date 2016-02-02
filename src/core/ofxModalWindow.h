@@ -50,10 +50,31 @@ class ofxModalWindow {
         static bool visible();
     
         template<typename T, typename args, class ListenerClass>
-        void onModalEvent(ofxModalEvent::EventType event, T* owner, void (ListenerClass::*listenerMethod)(args))
+        void addListener(T* owner, void (ListenerClass::*listenerMethod)(args))
         {
             using namespace std::placeholders;
-            subscribers.push_back({event, std::bind(listenerMethod, owner, _1)});
+            g_callbacks.push_back(std::bind(listenerMethod, owner, _1));
+        }
+    
+        template<typename T, typename args, class ListenerClass>
+        void addListener(ofxModalEvent::EventType event, T* owner, void (ListenerClass::*listenerMethod)(args))
+        {
+            using namespace std::placeholders;
+            e_callbacks.push_back({event, std::bind(listenerMethod, owner, _1)});
+        }
+    
+        void removeListener()
+        {
+            e_callbacks.clear();
+        }
+    
+        void removeListener(ofxModalEvent::EventType event)
+        {
+            for(int i=0; i<e_callbacks.size(); i++){
+                if (e_callbacks[i].eType == event){
+                    e_callbacks.erase(e_callbacks.begin() + i);
+                }
+            }
         }
     
     protected:
@@ -218,7 +239,8 @@ class ofxModalWindow {
             ofxModalEvent::EventType eType;
             onModalEventCallback callback;
         };
-        vector<subscriber> subscribers;
+        vector<subscriber> e_callbacks;
+        vector<onModalEventCallback> g_callbacks;
     
     /*
         static properties & methods

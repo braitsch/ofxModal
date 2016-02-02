@@ -161,11 +161,12 @@ ofxModalWindow::ofxModalWindow()
 
 void ofxModalWindow::dispatchCallbacks(ofxModalEvent::EventType eType)
 {
-    for(auto s: subscribers){
-        if (s.eType == eType){
-            s.callback(ofxModalEvent(eType, this));
+    for(auto e: e_callbacks){
+        if (e.eType == eType){
+            e.callback(ofxModalEvent(eType, this));
         }
     }
+    for(auto g: g_callbacks) g(ofxModalEvent(eType, this));
     if (eType == ofxModalEvent::HIDDEN){
         if (mAlertMessage != ""){
             if (mAlert != nullptr) mAlert->show(mAlertMessage);

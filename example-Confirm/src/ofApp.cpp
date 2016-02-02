@@ -5,10 +5,7 @@ void ofApp::setup()
     ofSetWindowPosition(ofGetScreenWidth()/2 - ofGetWidth()/2, 0);
     
 // listen for events //
-    confirm.onModalEvent(ofxModalEvent::SHOWN, this, &ofApp::onModalEvent);
-    confirm.onModalEvent(ofxModalEvent::HIDDEN, this, &ofApp::onModalEvent);
-    confirm.onModalEvent(ofxModalEvent::CANCEL, this, &ofApp::onModalEvent);
-    confirm.onModalEvent(ofxModalEvent::CONFIRM, this, &ofApp::onModalEvent);
+    confirm.addListener(this, &ofApp::onModalEvent);
     
 // bring the magic //
     confirm.setWidth(850);
