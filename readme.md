@@ -68,5 +68,6 @@ As described above it's a good idea to create a single Alert for your entire app
 	void setHeight(int height);
 	void setTitle(string text);
 	void setMessage(string text);
+	void setBackdropActive(bool active);
 
 	

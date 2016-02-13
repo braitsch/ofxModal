@@ -42,6 +42,7 @@ class ofxModalWindow {
         void setTitle(string text);
         void setMessage(string text);
         void setAlert(shared_ptr<ofxModalAlert> alert);
+        void setBackdropActive(bool active);
         virtual void setTheme(std::shared_ptr<ofxModalTheme> theme);
     
         int getWidth();
@@ -221,6 +222,7 @@ class ofxModalWindow {
     
         bool mVisible;
         bool mMessageVisible;
+        bool mBackdropActive;
         ofxParagraph* mMessage;
         vector<ModalComponent> mModalComponents;
         vector<ofxDatGuiButton*> mFooterButtons;
@@ -266,6 +268,7 @@ class ofxModalAlert : public ofxModalWindow {
             setTitle("alert");
             mActionButton = addButton("ok");
             setTheme(mTheme);
+            setBackdropActive(false);
             setMessage("This is an alert message!");
         }
     

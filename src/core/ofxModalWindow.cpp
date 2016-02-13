@@ -61,7 +61,6 @@ void ofxModalWindow::alert(string message)
     mAlertMessage = message;
 }
 
-
 void ofxModalWindow::setWidth(int w)
 {
     mModal.width = w;
@@ -122,6 +121,10 @@ void ofxModalWindow::setTheme(std::shared_ptr<ofxModalTheme> theme)
     setWidth(theme->layout.modal.width);
 }
 
+void ofxModalWindow::setBackdropActive(bool active)
+{
+    mBackdropActive = active;
+}
 
 int ofxModalWindow::getWidth()
 {
@@ -151,11 +154,12 @@ ofxModalWindow::ofxModalWindow()
 {
     mAlert = nullptr;
     mAlertMessage = "";
-    modals.push_back(this);
     mMessage = new ofxParagraph();
+    mBackdropActive = true;
+    mCloseButton.mouseOver = false;
     if (mTheme == nullptr) mTheme = std::make_shared<ofxModalTheme>();
     setTheme(mTheme);
-    mCloseButton.mouseOver = false;
+    modals.push_back(this);
 }
 
 
@@ -300,7 +304,7 @@ void ofxModalWindow::centerModal()
 void ofxModalWindow::onMousePress(ofMouseEventArgs &e)
 {
     ofPoint mouse = ofPoint(e.x, e.y);
-    if (ofRectangle(mModal.x, mModal.y, mModal.width, getHeight()).inside(mouse) == false) {
+    if (mBackdropActive && ofRectangle(mModal.x, mModal.y, mModal.width, getHeight()).inside(mouse) == false) {
         hide();
     }   else if (mCloseButton.hitRect.inside(mouse)){
         hide();
