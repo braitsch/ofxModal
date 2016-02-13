@@ -52,6 +52,7 @@ class ofxModalWindow {
         template<typename T, typename args, class ListenerClass>
         void addListener(T* owner, void (ListenerClass::*listenerMethod)(args))
         {
+            cout << "ofxModalWindow :: adding listener" << endl;
             using namespace std::placeholders;
             g_callbacks.push_back(std::bind(listenerMethod, owner, _1));
         }
@@ -59,17 +60,20 @@ class ofxModalWindow {
         template<typename T, typename args, class ListenerClass>
         void addListener(ofxModalEvent::EventType event, T* owner, void (ListenerClass::*listenerMethod)(args))
         {
+            cout << "ofxModalWindow :: adding listener" << endl;
             using namespace std::placeholders;
             e_callbacks.push_back({event, std::bind(listenerMethod, owner, _1)});
         }
     
         void removeListener()
         {
-            e_callbacks.clear();
+            cout << "ofxModalWindow :: removing listener" << endl;
+            g_callbacks.clear();
         }
     
         void removeListener(ofxModalEvent::EventType event)
         {
+            cout << "ofxModalWindow :: removing listener" << endl;
             for(int i=0; i<e_callbacks.size(); i++){
                 if (e_callbacks[i].eType == event){
                     e_callbacks.erase(e_callbacks.begin() + i);

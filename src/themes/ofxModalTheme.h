@@ -31,10 +31,10 @@ class ofxModalTheme {
     public:
     
         ofxModalTheme(){
-            close_button.normal.load("ofxbraitsch/ofxmodal/modal-close.png");
-            close_button.active.load("ofxbraitsch/ofxmodal/modal-close-hover.png");
-            fonts.title = ofxSmartFont::add("ofxbraitsch/fonts/HelveticaNeueLTStd-Md.otf", 24);
-            fonts.message = ofxSmartFont::add("ofxbraitsch/fonts/Verdana.ttf", 20);
+            buttonX.normal.load("ofxbraitsch/ofxmodal/modal-buttonX.png");
+            buttonX.active.load("ofxbraitsch/ofxmodal/modal-buttonX-hover.png");
+            fonts.title = ofxSmartFont::add("ofxbraitsch/fonts/HelveticaNeueLTStd-Md.otf", 24, "modal-title");
+            fonts.message = ofxSmartFont::add("ofxbraitsch/fonts/Roboto-Regular.ttf", 20, "modal-message");
         }
     
     /*
@@ -125,7 +125,7 @@ class ofxModalTheme {
             int hitPadding = 20;
             ofImage normal;
             ofImage active;
-        } close_button;
+        } buttonX;
 
 
 };

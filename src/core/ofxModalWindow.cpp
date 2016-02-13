@@ -102,11 +102,11 @@ void ofxModalWindow::setTheme(std::shared_ptr<ofxModalTheme> theme)
     mColor.body = theme->color.modal.body;
     mColor.footer = theme->color.modal.footer;
     mColor.hrule = theme->color.modal.hrule;
-    mCloseButton.normal = &theme->close_button.normal;
-    mCloseButton.active = &theme->close_button.active;
-    mCloseButton.rect.width = theme->close_button.width;
-    mCloseButton.rect.height = theme->close_button.height;
-    mCloseButton.hitPadding = theme->close_button.hitPadding;
+    mCloseButton.normal = &theme->buttonX.normal;
+    mCloseButton.active = &theme->buttonX.active;
+    mCloseButton.rect.width = theme->buttonX.width;
+    mCloseButton.rect.height = theme->buttonX.height;
+    mCloseButton.hitPadding = theme->buttonX.hitPadding;
     mAnimation.tTicks = theme->animation.speed * ofGetFrameRate();
     mAnimation.tOpacity = theme->alpha.window.background;
     mTitle.font = theme->fonts.title;
