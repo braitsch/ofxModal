@@ -169,7 +169,7 @@ void ofxModalWindow::dispatchCallbacks(ofxModalEvent::EventType eType)
     for(auto g: g_callbacks) g(ofxModalEvent(eType, this));
     if (eType == ofxModalEvent::HIDDEN){
         if (mAlertMessage != ""){
-            if (mAlert != nullptr) mAlert->show(mAlertMessage);
+            if (mAlert != nullptr) mAlert->alert(mAlertMessage);
             mAlertMessage = "";
         }
     }

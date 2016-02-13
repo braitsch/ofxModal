@@ -269,7 +269,7 @@ class ofxModalAlert : public ofxModalWindow {
             setMessage("This is an alert message!");
         }
     
-        void show(string message)
+        void alert(string message)
         {
             setMessage(message);
             ofxModalWindow::show();
