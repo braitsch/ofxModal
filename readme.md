@@ -2,22 +2,32 @@
 
 A flexible and extensible kit of Modal windows for [openFrameworks](http://openframeworks.cc/).
 
-...
+![ofxModalAlert](./readme-imgs/ofxModalAlert.gif)
+
+## Installation
+
+ofxModal is built on top of [ofxDatGui](https://github.com/braitsch/ofxDatGui) and [ofxParagraph](https://github.com/braitsch/ofxParagraph) which requires you to clone the repository recursively if you do not already have these addons installed.
+
+	git clone --recursive git@github.com:braitsch/ofxModal.git
+
+
+Once you've created a project copy the **ofxbraitsch** directory in the root of this repository to your project's bin/data directory. This directory contains the fonts & icons used by ofxModal & ofxDatGui.
 
 ## Alerts
 Displaying an Alert is as simple as:
 
 	ofxModalAlert myAlert;
 	myAlert.alert("you have borked the system.");
-	
-Although it's a good idea to create a single Alert for your entire application which you can then assign to other modal windows in the event they generate an error. 
+
+However it's a good idea to create a single application Alert that can be shared across multiple modal windows.
 
 	myCustomModal myModal;
 	shared_ptr<ofxModalAlert> myAlert = make_shared<ofxModalAlert>();
 	myModal.setAlert(myAlert);
+	myModal.show();
 	myModal.alert("hi it's me again!");
 	
-This automatically delays showing the Alert until after the offending window has closed eliminating the need for you to stagger them out yourself.
+This will queue the Alert to show after your custom modal window has closed.
 
 ## Confirms
 Confirm windows require a little more setup because you typically will want to do something based on the user's response.

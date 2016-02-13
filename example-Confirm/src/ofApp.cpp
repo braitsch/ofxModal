@@ -7,14 +7,10 @@ void ofApp::setup()
 // listen for events //
     confirm.addListener(this, &ofApp::onModalEvent);
     
-// bring the magic //
-    confirm.setWidth(850);
+// set a message and and show the modal //
     confirm.setMessage("press 'h' to hide this window, press 'm' to show it.");
     confirm.show();
 }
-
-void ofApp::update() { }
-void ofApp::draw() { }
 
 void ofApp::keyPressed(int key)
 {
