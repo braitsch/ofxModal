@@ -22,7 +22,6 @@
 
 #pragma once
 #include "ofxModalConfirm.h"
-#include "ofxModalInput.h"
 
 class ofxModal {
 

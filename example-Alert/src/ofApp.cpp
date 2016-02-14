@@ -27,7 +27,7 @@ void ofApp::draw()
 
 void ofApp::onButtonEvent(ofxDatGuiButtonEvent e)
 {
-    if (e.target == mShowAlert) mAlert->alert("hello!");
+    if (e.target == mShowAlert) mAlert->alert("Hello!");
 }
 
 void ofApp::onModalEvent(ofxModalEvent e)

@@ -41,6 +41,7 @@ class ofxModalWindow {
         void setHeight(int h);
         void setTitle(string text);
         void setMessage(string text);
+        void setMessageVisible(bool visible);
         void setMessageAlignment(ofxParagraph::Alignment align);
         void setAlert(shared_ptr<ofxModalAlert> alert);
         void setBackdropActive(bool active);
@@ -148,7 +149,12 @@ class ofxModalWindow {
             return btn;
         }
     
-        virtual void onButtonEvent(ofxDatGuiButtonEvent e) = 0;
+        ofxDatGuiButton* getButton(int index)
+        {
+            return mFooterButtons[index];
+        }
+    
+        virtual void onButtonEvent(ofxDatGuiButtonEvent e);
         void dispatchCallbacks(ofxModalEvent::EventType eType);
     
         string mAlertMessage;
@@ -233,6 +239,7 @@ class ofxModalWindow {
         inline void layout();
         inline void animate();
         void centerModal();
+        void setMessageTheme();
         void onMousePress(ofMouseEventArgs &e);
         void onMouseMove(ofMouseEventArgs &e);
         void onWindowResize(ofResizeEventArgs &e);
@@ -267,7 +274,7 @@ class ofxModalAlert : public ofxModalWindow {
         ofxModalAlert()
         {
             setTitle("alert");
-            mActionButton = addButton("ok");
+            getButton(0)->setLabel("ok");
             setTheme(mTheme);
             setBackdropActive(false);
             setMessage("This is an alert message!");
@@ -282,26 +289,14 @@ class ofxModalAlert : public ofxModalWindow {
         void setTheme(std::shared_ptr<ofxModalTheme> theme)
         {
             ofxModalWindow::setTheme(theme);
-            mActionButton->setWidth(theme->layout.button.width);
-            mActionButton->setLabelColor(theme->color.button.wireframe.label);
-            mActionButton->setBackgroundColors(theme->color.button.wireframe.background,
+            getButton(0)->setWidth(theme->layout.button.width);
+            getButton(0)->setLabelColor(theme->color.button.wireframe.label);
+            getButton(0)->setBackgroundColors(theme->color.button.wireframe.background,
                 theme->color.button.wireframe.backgroundOnMouseOver,
                 theme->color.button.wireframe.backgroundOnMouseDown);
             if (theme->layout.button.borders) {
-                mActionButton->setBorder(theme->color.button.wireframe.border, 1);
+                getButton(0)->setBorder(theme->color.button.wireframe.border, 1);
             }
-        }
-    
-    protected:
-    
-        ofxDatGuiButton* mActionButton;
-    
-    private:
-    
-        void onButtonEvent(ofxDatGuiButtonEvent e)
-        {
-            hide();
-            dispatchCallbacks(ofxModalEvent::CONFIRM);
         }
 
 };

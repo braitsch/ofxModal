@@ -65,7 +65,7 @@ void ofxModalWindow::setWidth(int w)
 {
     mModal.width = w;
     mModal.x = ofGetWidth() / 2 - mModal.width / 2;
-    mMessage->setWidth(mModal.width - (mModal.padding * 2));
+    if (mMessage != nullptr) mMessage->setWidth(mModal.width - (mModal.padding * 2));
 }
 
 void ofxModalWindow::setHeight(int h)
@@ -79,19 +79,26 @@ void ofxModalWindow::setHeight(int h)
 void ofxModalWindow::setTitle(string text)
 {
     mTitle.text = ofToUpper(text);
-    mTitle.height = mTitle.font->height(mTitle.text);
+    if (mTitle.font != nullptr) mTitle.height = mTitle.font->height(mTitle.text);
 }
 
 void ofxModalWindow::setMessage(string text)
 {
+    if (mMessage == nullptr) mMessage = new ofxParagraph();
+    setMessageTheme();
     mMessage->setText(text);
     mMessageVisible = true;
     if (mModal.autoSize) mModal.height.body = mMessage->getHeight() + mModal.padding * 2;
 }
 
+void ofxModalWindow::setMessageVisible(bool visible)
+{
+    mMessageVisible = visible;
+}
+
 void ofxModalWindow::setMessageAlignment(ofxParagraph::Alignment align)
 {
-    mMessage->setAlignment(align);
+    if (mMessage != nullptr) mMessage->setAlignment(align);
 }
 
 void ofxModalWindow::setAlert(shared_ptr<ofxModalAlert> alert)
@@ -101,6 +108,7 @@ void ofxModalWindow::setAlert(shared_ptr<ofxModalAlert> alert)
 
 void ofxModalWindow::setTheme(std::shared_ptr<ofxModalTheme> theme)
 {
+    mTheme = theme;
     mColor.title = theme->color.text.title;
     mColor.header = theme->color.modal.header;
     mColor.body = theme->color.modal.body;
@@ -114,9 +122,7 @@ void ofxModalWindow::setTheme(std::shared_ptr<ofxModalTheme> theme)
     mAnimation.tTicks = theme->animation.speed * ofGetFrameRate();
     mAnimation.tOpacity = theme->alpha.window.background;
     mTitle.font = theme->fonts.title;
-    mMessage->setFont(theme->fonts.message);
-    mMessage->setColor(theme->color.text.body);
-    mMessage->setSpacing(theme->layout.text.wordSpacing);
+    mTitle.height = theme->fonts.title->height(mTitle.text);
     mModal.height.header = mModal.padding * 2 + mCloseButton.rect.height;
     mModal.height.footer = mModal.padding * 3;
     mModal.height.body = theme->layout.modal.height - mModal.height.header - mModal.height.footer;
@@ -124,6 +130,17 @@ void ofxModalWindow::setTheme(std::shared_ptr<ofxModalTheme> theme)
     mModal.vMargin = theme->layout.modal.vMargin;
     mModal.autoSize = theme->layout.modal.autoSize;
     setWidth(theme->layout.modal.width);
+    if (mMessage != nullptr) setMessageTheme();
+    for (int i=0; i<mFooterButtons.size(); i++){
+        mFooterButtons[i]->setWidth(theme->layout.button.width);
+        mFooterButtons[i]->setLabelColor(theme->color.button.wireframe.label);
+        mFooterButtons[i]->setBackgroundColors(theme->color.button.wireframe.background,
+            theme->color.button.wireframe.backgroundOnMouseOver,
+            theme->color.button.wireframe.backgroundOnMouseDown);
+        if (theme->layout.button.borders) {
+            mFooterButtons[i]->setBorder(theme->color.button.wireframe.border, 1);
+        }
+    }
 }
 
 void ofxModalWindow::setBackdropActive(bool active)
@@ -159,14 +176,16 @@ ofxModalWindow::ofxModalWindow()
 {
     mAlert = nullptr;
     mAlertMessage = "";
-    mMessage = new ofxParagraph();
+    mMessage =  nullptr;
     mBackdropActive = true;
     mCloseButton.mouseOver = false;
     if (mTheme == nullptr) mTheme = std::make_shared<ofxModalTheme>();
     setTheme(mTheme);
+    setTitle("Modal Window");
+    addButton("Close");
+    setTheme(mTheme);
     modals.push_back(this);
 }
-
 
 void ofxModalWindow::dispatchCallbacks(ofxModalEvent::EventType eType)
 {
@@ -210,7 +229,7 @@ void ofxModalWindow::onDraw(ofEventArgs &e)
         ofDrawLine(mBreak1.p1, mBreak1.p2);
         ofDrawLine(mBreak2.p1, mBreak2.p2);
     // draw message //
-        if (mMessageVisible) mMessage->draw();
+        if (mMessage != nullptr && mMessageVisible) mMessage->draw();
     // draw close button //
         ofSetColor(ofColor::white);
         if (mCloseButton.mouseOver == false){
@@ -236,6 +255,14 @@ void ofxModalWindow::onUpdate(ofEventArgs &e)
     }
 }
 
+void ofxModalWindow::onButtonEvent(ofxDatGuiButtonEvent e)
+{
+    if (e.target == mFooterButtons[0]){
+        hide();
+        dispatchCallbacks(ofxModalEvent::CONFIRM);
+    }
+}
+
 void ofxModalWindow::layout()
 {
     mTitle.x = mModal.x + mModal.padding;
@@ -248,7 +275,9 @@ void ofxModalWindow::layout()
     mBreak2.p1.y = mModal.y + mModal.height.header + mModal.height.body;
     mBreak2.p2.x = mBreak1.p2.x;
     mBreak2.p2.y = mBreak2.p1.y;
-    mMessage->setPosition(mBreak1.p1.x + mModal.padding, mBreak1.p1.y + mModal.padding + mMessage->getStringHeight());
+    if (mMessage != nullptr) {
+        mMessage->setPosition(mBreak1.p1.x + mModal.padding, mBreak1.p1.y + mModal.padding + mMessage->getStringHeight());
+    }
     mCloseButton.rect.x = mModal.x + mModal.width - mModal.padding - mCloseButton.rect.width;
     mCloseButton.rect.y = mModal.y + mModal.padding;
     mCloseButton.hitRect.x = mCloseButton.rect.x - mCloseButton.hitPadding;
@@ -304,6 +333,14 @@ void ofxModalWindow::centerModal()
     mModal.x = ofGetWidth() / 2 - mModal.width / 2;
     mModal.y = -height + mAnimation.percent * (ofGetHeight()/2 - height/2 + height);
     layout();
+}
+
+void ofxModalWindow::setMessageTheme()
+{
+    mMessage->setFont(mTheme->fonts.message);
+    mMessage->setColor(mTheme->color.text.body);
+    mMessage->setSpacing(mTheme->layout.text.wordSpacing);
+    mMessage->setWidth(mModal.width - (mModal.padding * 2));
 }
 
 void ofxModalWindow::onMousePress(ofMouseEventArgs &e)
