@@ -72,8 +72,6 @@ As described above it's a good idea to create a single Alert for your entire app
 		}
 	}
 
-![ofxModalAlert](./readme-imgs/ofxModalAutoAlert.gif)
-
 ## API
 
 	void show();
