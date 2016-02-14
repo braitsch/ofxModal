@@ -74,12 +74,17 @@ As described above it's a good idea to create a single Alert for your entire app
 
 ![ofxModalAlert](./readme-imgs/ofxModalAutoAlert.gif)
 
-## Customization
+## API
 
+	void show();
+	void hide();
 	void setWidth(int width);
 	void setHeight(int height);
 	void setTitle(string text);
 	void setMessage(string text);
-	void setBackdropActive(bool active);
+	void setMessageAlignment(ofxParagraph::Alignment align);
+	void setBackdropActive(bool active); // close window if backdrop is clicked //
 
-	
+## Customization
+
+[ofxModalTheme.h](https://github.com/braitsch/ofxModal/blob/master/src/themes/ofxModalTheme.h)
