@@ -54,7 +54,7 @@ Confirm windows require a little more setup because you typically will want to d
 	};
 
 ## Appending Alerts
-As described above it's a good idea to create a single Alert for your entire application and then assign it to each of your modals to display in the event they encounter an error.
+As described above it's a good idea to create a single Alert for your entire application and then assign it to each of your modals to display should an interaction in your modal warrant an alert.
 
 	myCustomModal myModal;
 	shared_ptr<ofxModalAlert> myAlert = make_shared<ofxModalAlert>();
@@ -71,6 +71,8 @@ As described above it's a good idea to create a single Alert for your entire app
 			}
 		}
 	}
+
+![ofxModalAlert](./readme-imgs/ofxModalAutoAlert.gif)
 
 ## Customization
 

@@ -89,6 +89,11 @@ void ofxModalWindow::setMessage(string text)
     if (mModal.autoSize) mModal.height.body = mMessage->getHeight() + mModal.padding * 2;
 }
 
+void ofxModalWindow::setMessageAlignment(ofxParagraph::Alignment align)
+{
+    mMessage->setAlignment(align);
+}
+
 void ofxModalWindow::setAlert(shared_ptr<ofxModalAlert> alert)
 {
     mAlert = alert;

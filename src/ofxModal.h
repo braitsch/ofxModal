@@ -28,18 +28,9 @@ class ofxModal {
 
     public:
 
-        static void alert(string message)
-        {
-        
-        }
-
         static bool visible()
         {
             return ofxModalWindow::visible();
         }
-    
-    
-    private:
-        ofxModalAlert mAlert;
     
 };
