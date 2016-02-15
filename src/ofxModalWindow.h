@@ -145,6 +145,10 @@ class ofxModalWindow {
             btn->setStripeVisible(false);
             btn->setLabelAlignment(ofxDatGuiAlignment::CENTER);
             btn->onButtonEvent(this, &ofxModalWindow::onButtonEvent);
+            btn->setWidth(mTheme->layout.button.width);
+            btn->setLabelColor(mTheme->color.button.wireframe.label);
+            btn->setBackgroundColors(mTheme->color.button.wireframe.background, mTheme->color.button.wireframe.backgroundOnMouseOver, mTheme->color.button.wireframe.backgroundOnMouseDown);
+            btn->setBorder(mTheme->color.button.wireframe.border, 1);
             mFooterButtons.push_back(btn);
             return btn;
         }

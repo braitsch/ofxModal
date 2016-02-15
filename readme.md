@@ -2,7 +2,7 @@
 
 A flexible and extensible kit of Modal windows for [openFrameworks](http://openframeworks.cc/).
 
-![modalLogin](./readme-imgs/login-window-1.png)
+![modalLogin](./readme-imgs/login-window-3.png)
 
 ## Installation
 
@@ -86,9 +86,34 @@ To add components simply pass an **ofxDatGui** component to the ``addComponent``
 
 ![modalLogin](./readme-imgs/login-window-1.png)
 
-The window will autosize to the fit the components you add however you can override this by explicity setting the height via ``modal->setHeight();``
+The window will autosize to the fit the components as you add them however you can override this by explicity setting the height via ``modal->setHeight();``
 
 ## Footer Buttons
+
+You can add additional buttons to the footer via:
+
+	myModal.addButton("Cancel");
+
+Buttons are appended to the left of the button before it.
+
+![modalLogin](./readme-imgs/login-window-2.png)
+
+When you add a button you get back a pointer to the **ofxDatGuiButton** that was added which you can style via the [ofxDatGui API](http://braitsch.github.io/ofxDatGui/index.html#api).
+
+However you can also retrieve a button by its index which are numbered from right to left. (zero based)
+
+	ofxDatGuiButton* closeButton = myModal.getButton(0);
+	closeButton->setLabel("submit");
+	closeButton->setLabelColor(ofColor::fromHex(0xffffff));
+	closeButton->setBackgroundColors(
+		ofColor::fromHex(0x337ab7),		// normal //
+		ofColor::fromHex(0x286090), 	// on mouse over //
+		ofColor::fromHex(0x1f4c73)		// on mouse down //
+	closeButton->setBorder(ofColor::fromHex(0x1f4c73), 1);
+
+![modalLogin](./readme-imgs/login-window-3.png)
+
+## Events
 
 ...
 

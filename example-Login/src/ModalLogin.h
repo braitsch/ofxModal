@@ -17,6 +17,12 @@ class ModalLogin : public ofxModalWindow{
             setTitle("Login");
             addComponent(new ofxDatGuiTextInput("username", "username"));
             addComponent(new ofxDatGuiTextInput("password", "password"));
+            addButton("Cancel");
+            getButton(0)->setLabel("Submit");
+            getButton(0)->setLabelColor(mTheme->color.button.darkblue.label);
+            getButton(0)->setBackgroundColors(mTheme->color.button.darkblue.background,
+                mTheme->color.button.darkblue.backgroundOnMouseOver, mTheme->color.button.darkblue.backgroundOnMouseDown);
+            getButton(0)->setBorder(mTheme->color.button.darkblue.border, 1);
         }
         
 };
