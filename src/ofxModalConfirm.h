@@ -52,18 +52,6 @@ class ofxModalConfirm : public ofxModalWindow {
                 getButton(1)->setBorder(theme->color.button.wireframe.border, 1);
             }
         }
-    
-    protected:
-    
-        void onButtonEvent(ofxDatGuiButtonEvent e)
-        {
-            hide();
-            if (e.target == getButton(1)){
-                dispatchCallbacks(ofxModalEvent::CANCEL);
-            }   else if (e.target == getButton(0)){
-                dispatchCallbacks(ofxModalEvent::CONFIRM);
-            }
-        }
 
 };
 

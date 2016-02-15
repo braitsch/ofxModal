@@ -175,11 +175,10 @@ Modal windows themselves can be customized by editing or extending [ofxModalThem
 	void setMessageAlignment(ofxParagraph::Alignment align);
 	void setAlert(shared_ptr<ofxModalAlert> alert);
 	void setBackdropActive(bool active);
-	void setTheme(std::shared_ptr<ofxModalTheme> theme);
+	void setTheme(shared_ptr<ofxModalTheme> theme);
 
 	// protected methods //
 	void addButton(string label);
 	ofxDatGuiButton* getButton(int index);
 	ofxDatGuiComponent* addComponent(ofxDatGuiComponent* component);
 	void autoSize();
-	void dispatchCallbacks(ofxModalEvent::EventType eType);

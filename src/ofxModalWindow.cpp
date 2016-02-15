@@ -40,17 +40,17 @@ void ofxModalWindow::show()
         mState = FADING_IN;
         mAnimation.nTicks = 0;
         mAnimation.percent = 0;
-        ofAddListener(ofEvents().draw, this, &ofxModalWindow::onDraw);
-        ofAddListener(ofEvents().update, this, &ofxModalWindow::onUpdate);
-        ofAddListener(ofEvents().mouseMoved, this, &ofxModalWindow::onMouseMove);
-        ofAddListener(ofEvents().mousePressed, this, &ofxModalWindow::onMousePress);
-        ofAddListener(ofEvents().windowResized, this, &ofxModalWindow::onWindowResize);
+        ofAddListener(ofEvents().draw, this, &ofxModalWindow::onDraw, OF_EVENT_ORDER_AFTER_APP + 9999);
+        ofAddListener(ofEvents().update, this, &ofxModalWindow::onUpdate, OF_EVENT_ORDER_AFTER_APP + 9999);
+        ofAddListener(ofEvents().mouseMoved, this, &ofxModalWindow::onMouseMove, OF_EVENT_ORDER_AFTER_APP + 9999);
+        ofAddListener(ofEvents().mousePressed, this, &ofxModalWindow::onMousePress, OF_EVENT_ORDER_AFTER_APP + 9999);
+        ofAddListener(ofEvents().windowResized, this, &ofxModalWindow::onWindowResize, OF_EVENT_ORDER_AFTER_APP + 9999);
     }
 }
 
 void ofxModalWindow::hide()
 {
-    mVisible = true;
+    mVisible = false;
     mState = FADING_OUT;
     mAnimation.nTicks = 0;
     mAnimation.percent = 0;
@@ -345,7 +345,7 @@ void ofxModalWindow::setMessageTheme()
 void ofxModalWindow::onMousePress(ofMouseEventArgs &e)
 {
     ofPoint mouse = ofPoint(e.x, e.y);
-    if (mBackdropActive && ofRectangle(mModal.x, mModal.y, mModal.width, getHeight()).inside(mouse) == false) {
+    if (mVisible && mBackdropActive && ofRectangle(mModal.x, mModal.y, mModal.width, getHeight()).inside(mouse) == false) {
         hide();
     }   else if (mCloseButton.hitRect.inside(mouse)){
         hide();

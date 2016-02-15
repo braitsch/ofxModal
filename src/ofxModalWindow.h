@@ -54,7 +54,7 @@ class ofxModalWindow {
         template<typename T, typename args, class ListenerClass>
         void addListener(T* owner, void (ListenerClass::*listenerMethod)(args))
         {
-            cout << "ofxModalWindow :: adding listener" << endl;
+        //  cout << "ofxModalWindow :: adding listener" << endl;
             using namespace std::placeholders;
             g_callbacks.push_back(std::bind(listenerMethod, owner, _1));
         }
@@ -62,20 +62,20 @@ class ofxModalWindow {
         template<typename T, typename args, class ListenerClass>
         void addListener(ofxModalEvent::EventType event, T* owner, void (ListenerClass::*listenerMethod)(args))
         {
-            cout << "ofxModalWindow :: adding listener" << endl;
+        //  cout << "ofxModalWindow :: adding listener" << endl;
             using namespace std::placeholders;
             e_callbacks.push_back({event, std::bind(listenerMethod, owner, _1)});
         }
     
         void removeListener()
         {
-            cout << "ofxModalWindow :: removing listener" << endl;
+        //  cout << "ofxModalWindow :: removing listener" << endl;
             g_callbacks.clear();
         }
     
         void removeListener(ofxModalEvent::EventType event)
         {
-            cout << "ofxModalWindow :: removing listener" << endl;
+        //  cout << "ofxModalWindow :: removing listener" << endl;
             for(int i=0; i<e_callbacks.size(); i++){
                 if (e_callbacks[i].eType == event){
                     e_callbacks.erase(e_callbacks.begin() + i);
@@ -156,9 +156,6 @@ class ofxModalWindow {
         {
             return mFooterButtons[index];
         }
-    
-        virtual void onButtonEvent(ofxDatGuiButtonEvent e);
-        void dispatchCallbacks(ofxModalEvent::EventType eType);
     
         string mAlertMessage;
         shared_ptr<ofxModalAlert> mAlert;
@@ -245,6 +242,8 @@ class ofxModalWindow {
         void onMousePress(ofMouseEventArgs &e);
         void onMouseMove(ofMouseEventArgs &e);
         void onWindowResize(ofResizeEventArgs &e);
+        void onButtonEvent(ofxDatGuiButtonEvent e);
+        void dispatchCallbacks(ofxModalEvent::EventType eType);
     
     /*
         event subscribers
@@ -286,19 +285,6 @@ class ofxModalAlert : public ofxModalWindow {
         {
             setMessage(message);
             ofxModalWindow::show();
-        }
-    
-        void setTheme(std::shared_ptr<ofxModalTheme> theme)
-        {
-            ofxModalWindow::setTheme(theme);
-            getButton(0)->setWidth(theme->layout.button.width);
-            getButton(0)->setLabelColor(theme->color.button.wireframe.label);
-            getButton(0)->setBackgroundColors(theme->color.button.wireframe.background,
-                theme->color.button.wireframe.backgroundOnMouseOver,
-                theme->color.button.wireframe.backgroundOnMouseDown);
-            if (theme->layout.button.borders) {
-                getButton(0)->setBorder(theme->color.button.wireframe.border, 1);
-            }
         }
 
 };
