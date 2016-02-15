@@ -11,6 +11,7 @@ class ofApp : public ofBaseApp{
         void keyPressed(int key);
     
         ModalLogin mLogin;
+        shared_ptr<ofxModalAlert> mAlert;
         void onLoginEvent(ofxModalEvent e);
 		
 };

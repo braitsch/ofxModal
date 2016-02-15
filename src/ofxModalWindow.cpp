@@ -89,14 +89,8 @@ void ofxModalWindow::setMessage(string text)
         if (mMessage == nullptr) mMessage = new ofxParagraph();
         setMessageTheme();
         mMessage->setText(text);
-        mMessageVisible = true;
         if (mModal.autoSize) mModal.height.body = mMessage->getHeight() + mModal.padding * 2;
     }
-}
-
-void ofxModalWindow::setMessageVisible(bool visible)
-{
-    mMessageVisible = visible;
 }
 
 void ofxModalWindow::setMessageAlignment(ofxParagraph::Alignment align)
@@ -232,7 +226,7 @@ void ofxModalWindow::onDraw(ofEventArgs &e)
         ofDrawLine(mBreak1.p1, mBreak1.p2);
         ofDrawLine(mBreak2.p1, mBreak2.p2);
     // draw message //
-        if (mMessage != nullptr && mMessageVisible) mMessage->draw();
+        if (mMessage != nullptr) mMessage->draw();
     // draw close button //
         ofSetColor(ofColor::white);
         if (mCloseButton.mouseOver == false){
@@ -260,9 +254,11 @@ void ofxModalWindow::onUpdate(ofEventArgs &e)
 
 void ofxModalWindow::onButtonEvent(ofxDatGuiButtonEvent e)
 {
+    hide();
     if (e.target == mFooterButtons[0]){
-        hide();
         dispatchCallbacks(ofxModalEvent::CONFIRM);
+    }   else if (mFooterButtons.size() > 1 && e.target == mFooterButtons[1]){
+        dispatchCallbacks(ofxModalEvent::CANCEL);
     }
 }
 

@@ -31,9 +31,7 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e)
 
 void ofApp::onModalEvent(ofxModalEvent e)
 {
-    if (e.type == ofxModalEvent::CANCEL){
-        cout << "cancel button was selected" << endl;
-    }   else if (e.type == ofxModalEvent::CONFIRM){
+    if (e.type == ofxModalEvent::CONFIRM){
         cout << "confirm button was selected" << endl;
     }
 }
