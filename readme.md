@@ -160,7 +160,7 @@ All ofxDatGui components can be styled by either calling a specific [styling met
 
 ![modalLogin](./readme-imgs/login-window-4.png)
 
-Modal windows themselves can be customized by editing or extending [ofxModalTheme](https://github.com/braitsch/ofxModal/blob/master/src/themes/ofxModalTheme.h).
+Modal windows themselves can be customized by editing or extending [ofxModalTheme](https://github.com/braitsch/ofxModal/blob/master/src/ofxModalTheme.h).
 
 ## API Summary
 
