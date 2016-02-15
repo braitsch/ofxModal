@@ -84,11 +84,14 @@ void ofxModalWindow::setTitle(string text)
 
 void ofxModalWindow::setMessage(string text)
 {
-    if (mMessage == nullptr) mMessage = new ofxParagraph();
-    setMessageTheme();
-    mMessage->setText(text);
-    mMessageVisible = true;
-    if (mModal.autoSize) mModal.height.body = mMessage->getHeight() + mModal.padding * 2;
+// disabled if this modal already has components //
+    if (mModalComponents.size() == 0){
+        if (mMessage == nullptr) mMessage = new ofxParagraph();
+        setMessageTheme();
+        mMessage->setText(text);
+        mMessageVisible = true;
+        if (mModal.autoSize) mModal.height.body = mMessage->getHeight() + mModal.padding * 2;
+    }
 }
 
 void ofxModalWindow::setMessageVisible(bool visible)
@@ -181,7 +184,7 @@ ofxModalWindow::ofxModalWindow()
     mCloseButton.mouseOver = false;
     if (mTheme == nullptr) mTheme = std::make_shared<ofxModalTheme>();
     setTheme(mTheme);
-    setTitle("Modal Window");
+    setTitle("Title");
     addButton("Close");
     setTheme(mTheme);
     modals.push_back(this);

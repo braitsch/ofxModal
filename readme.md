@@ -2,7 +2,7 @@
 
 A flexible and extensible kit of Modal windows for [openFrameworks](http://openframeworks.cc/).
 
-![ofxModalAlert](./readme-imgs/ofxModalAlert.gif)
+![modalLogin](./readme-imgs/login-window-1.png)
 
 ## Installation
 
@@ -19,18 +19,30 @@ Displaying an Alert is as simple as:
 	ofxModalAlert myAlert;
 	myAlert.alert("you have borked the system.");
 
+![ofxModalConfirm](./readme-imgs/alert-window.png)
+
 However it's a good idea to create a single application Alert that can be shared across multiple modal windows.
 
-	myCustomModal myModal;
+	loginModal login;
 	shared_ptr<ofxModalAlert> myAlert = make_shared<ofxModalAlert>();
-	myModal.setAlert(myAlert);
-	myModal.show();
-	myModal.alert("hi it's me again!");
+	login.setAlert(myAlert);
+	login.addListener(this, &ofApp::onLoginEvent);
+	login.show();
 	
-This will queue the Alert to show after your custom modal window has closed.
+	void onLoginEvent(ofxModalEvent e)
+	{
+		if (e.type == ofxModalEvent::CONFIRM){
+		// query your custom modal for valid user data //
+			if (login.hasValidUserData() == false){
+				login.alert("error! invalid credentials");
+			}
+		}
+	}
+	
+This will queue the Alert to show **after** your custom modal window has closed.
 
 ## Confirms
-Confirm windows require a little more setup because you typically will want to do something based on the user's response.
+Confirm windows are similar to Alerts except that they also give you a cancel button and can be closed by clicking the modal backdrop.
 
 	ofxModalConfirm confirm;
 	confirm.addListener(this, &ofApp::onModalEvent);
@@ -46,31 +58,39 @@ Confirm windows require a little more setup because you typically will want to d
 		}
 	}
 
+![ofxModalConfirm](./readme-imgs/confirm-window.png)
+
+
 ## Custom Modals
 
-	class myCustomModal : public ofxModalConfirm
+Custom modals extend ofxModalWindow which gives you a window with a title, space for components and a close button.
+
+![ofxModalWindow](./readme-imgs/blank-window.png)
+
+	class myCustomModal : public ofxModalWindow
 	{
 		...
 	};
 
-## Appending Alerts
-As described above it's a good idea to create a single Alert for your entire application and then assign it to each of your modals to display should an interaction in your modal warrant an alert.
+To add components simply pass an **ofxDatGui** component to the ``addComponent`` method.
 
-	myCustomModal myModal;
-	shared_ptr<ofxModalAlert> myAlert = make_shared<ofxModalAlert>();
-
-	myModal.setAlert(myAlert);
-	myModal.addListener(this, &ofApp::onModalEvent);
-	
-	void onModalEvent(ofxModalEvent e)
+	class myLoginModal : public ofxModalWindow
 	{
-		if (e.type == ofxModalEvent::CONFIRM){
-		// query your custom modal for valid user data //
-			if (myModal.hasValidUserData() == false){
-				myModal.alert("Nope. Invalid Response");
+		public:
+			myLoginModal(){
+				setTitle("Login");
+				addComponent(new ofxDatGuiTextInput("name"));
+				addComponent(new ofxDatGuiTextInput("password"));
 			}
-		}
-	}
+	};
+
+![modalLogin](./readme-imgs/login-window-1.png)
+
+The window will autosize to the fit the components you add however you can override this by explicity setting the height via ``modal->setHeight();``
+
+## Footer Buttons
+
+...
 
 ## API
 

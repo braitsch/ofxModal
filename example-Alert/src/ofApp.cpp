@@ -12,7 +12,6 @@ void ofApp::setup()
     mShowAlert->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     mShowAlert->setPosition(ofGetWidth()/2 - mShowAlert->getWidth()/2, 450);
     mShowAlert->onButtonEvent(this, &ofApp::onButtonEvent);
-    
 }
 
 void ofApp::update()
@@ -27,7 +26,7 @@ void ofApp::draw()
 
 void ofApp::onButtonEvent(ofxDatGuiButtonEvent e)
 {
-    if (e.target == mShowAlert) mAlert->alert("Hello!");
+    if (e.target == mShowAlert) mAlert->alert("BANG!");
 }
 
 void ofApp::onModalEvent(ofxModalEvent e)

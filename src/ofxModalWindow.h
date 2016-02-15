@@ -104,7 +104,7 @@ class ofxModalWindow {
         };
     
         template<class component>
-        component* attach(component* c, int x = 0, int y = 0, int w = 0)
+        component* addComponent(component* c, int x = 0, int y = 0, int w = 0)
         {
             if (y == 0) {
                 y = mModal.padding;

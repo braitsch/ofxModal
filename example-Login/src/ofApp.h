@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ModalForm.h"
+#include "ModalLogin.h"
 
 class ofApp : public ofBaseApp{
 
@@ -10,7 +10,7 @@ class ofApp : public ofBaseApp{
         void setup();
         void keyPressed(int key);
     
-        ModalForm mForm;
-        void onModalEvent(ofxModalEvent e);
+        ModalLogin mLogin;
+        void onLoginEvent(ofxModalEvent e);
 		
 };
