@@ -17,7 +17,7 @@ Once you've created a project copy the **ofxbraitsch** directory in the root of 
 Displaying an Alert is as simple as:
 
 	ofxModalAlert myAlert;
-	myAlert.alert("you have borked the system.");
+	myAlert.alert("It's time to go outside.");
 
 ![ofxModalConfirm](./readme-imgs/alert-window.png)
 

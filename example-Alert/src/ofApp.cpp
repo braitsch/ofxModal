@@ -26,7 +26,7 @@ void ofApp::draw()
 
 void ofApp::onButtonEvent(ofxDatGuiButtonEvent e)
 {
-    if (e.target == mShowAlert) mAlert->alert("BANG!");
+    if (e.target == mShowAlert) mAlert->alert("It's time to go outside.");
 }
 
 void ofApp::onModalEvent(ofxModalEvent e)
