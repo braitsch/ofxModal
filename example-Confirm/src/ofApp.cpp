@@ -6,15 +6,16 @@ void ofApp::setup()
     
 // listen for events //
     confirm.addListener(this, &ofApp::onModalEvent);
+//  confirm.setButtonLabel("ok");
     
 // set a message and and show the modal //
-    confirm.setMessage("press 'h' to hide this window, press 'm' to show it.");
+    confirm.setMessage("press 'h' to hide this window, press 's' to show it.");
     confirm.show();
 }
 
 void ofApp::keyPressed(int key)
 {
-    if (key == 'm'){
+    if (key == 's'){
         confirm.show();
     }   else if (key == 'h'){
         confirm.hide();

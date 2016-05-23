@@ -50,10 +50,12 @@ void ofxModalWindow::show()
 
 void ofxModalWindow::hide()
 {
-    mVisible = false;
-    mState = FADING_OUT;
-    mAnimation.nTicks = 0;
-    mAnimation.percent = 0;
+    if (mVisible){
+        mVisible = false;
+        mState = FADING_OUT;
+        mAnimation.nTicks = 0;
+        mAnimation.percent = 0;
+    }
 }
 
 void ofxModalWindow::alert(string message)
@@ -96,6 +98,15 @@ void ofxModalWindow::setMessage(string text)
 void ofxModalWindow::setMessageAlignment(ofxParagraph::Alignment align)
 {
     if (mMessage != nullptr) mMessage->setAlignment(align);
+}
+
+void ofxModalWindow::setButtonLabel(string label, int bIndex)
+{
+    if (bIndex < mFooterButtons.size()){
+        mFooterButtons[bIndex]->setLabel(label);
+    }   else{
+        cout << "ofxModalWindow::setButtonLabel index " << bIndex << " is out of range" << endl;
+    }
 }
 
 void ofxModalWindow::setAlert(shared_ptr<ofxModalAlert> alert)

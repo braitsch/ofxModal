@@ -29,8 +29,8 @@ void ofApp::onLoginEvent(ofxModalEvent e)
     }   else if (e.type == ofxModalEvent::CONFIRM){
     // check for valid login data here //
         cout << "confirm button was selected" << endl;
-    // if data is invalid show an alert //
-    //  mLogin.alert("sorry, login failed.");
+    // show an alert if login was successful //
+        mLogin.alert("LOGIN SUCCESSFUL!");
     }
 }
 

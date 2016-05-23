@@ -173,6 +173,7 @@ Modal windows themselves can be customized by editing or extending [ofxModalThem
 	void setTitle(string text);
 	void setMessage(string text);
 	void setMessageAlignment(ofxParagraph::Alignment align);
+	void setButtonLabel(string label, int buttonIndex = 0);
 	void setAlert(shared_ptr<ofxModalAlert> alert);
 	void setBackdropActive(bool active);
 	void setTheme(shared_ptr<ofxModalTheme> theme);

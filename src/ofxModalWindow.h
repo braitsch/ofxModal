@@ -42,6 +42,7 @@ class ofxModalWindow {
         void setTitle(string text);
         void setMessage(string text);
         void setMessageAlignment(ofxParagraph::Alignment align);
+        void setButtonLabel(string label, int bIndex = 0);
         void setAlert(shared_ptr<ofxModalAlert> alert);
         void setBackdropActive(bool active);
         virtual void setTheme(std::shared_ptr<ofxModalTheme> theme);
