@@ -151,9 +151,12 @@ void ofxModalWindow::setTheme(std::shared_ptr<ofxModalTheme> theme)
     }
 }
 
-void ofxModalWindow::setBackdropActive(bool active)
+void ofxModalWindow::setCancelable(bool cancelable)
 {
-    mBackdropActive = active;
+    mCancelable = cancelable;
+    for (auto btn : mFooterButtons){
+        if (ofToLower(btn->getLabel()) == "cancel") btn->setVisible(cancelable);
+    }
 }
 
 int ofxModalWindow::getWidth()
@@ -185,7 +188,7 @@ ofxModalWindow::ofxModalWindow()
     mAlert = nullptr;
     mAlertMessage = "";
     mMessage =  nullptr;
-    mBackdropActive = true;
+    mCancelable = true;
     mCloseButton.mouseOver = false;
     if (mTheme == nullptr) mTheme = std::make_shared<ofxModalTheme>();
     setTheme(mTheme);
@@ -239,11 +242,13 @@ void ofxModalWindow::onDraw(ofEventArgs &e)
     // draw message //
         if (mMessage != nullptr) mMessage->draw();
     // draw close button //
-        ofSetColor(ofColor::white);
-        if (mCloseButton.mouseOver == false){
-            mCloseButton.normal->draw(mCloseButton.rect);
-        }   else{
-            mCloseButton.active->draw(mCloseButton.rect);
+        if (mCancelable){
+            ofSetColor(ofColor::white);
+            if (mCloseButton.mouseOver == false){
+                mCloseButton.normal->draw(mCloseButton.rect);
+            }   else{
+                mCloseButton.active->draw(mCloseButton.rect);
+            }        
         }
     ofPopStyle();
 // draw body components //
@@ -356,10 +361,12 @@ void ofxModalWindow::setMessageTheme()
 void ofxModalWindow::onMousePress(ofMouseEventArgs &e)
 {
     ofPoint mouse = ofPoint(e.x, e.y);
-    if (mVisible && mBackdropActive && ofRectangle(mModal.x, mModal.y, mModal.width, getHeight()).inside(mouse) == false) {
-        hide();
-    }   else if (mCloseButton.hitRect.inside(mouse)){
-        hide();
+    if (mVisible && mCancelable == true){
+        if (ofRectangle(mModal.x, mModal.y, mModal.width, getHeight()).inside(mouse) == false) {
+            hide();
+        }   else if (mCloseButton.hitRect.inside(mouse)){
+            hide();
+        }
     }
 }
 

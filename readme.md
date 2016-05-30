@@ -162,6 +162,10 @@ All ofxDatGui components can be styled by either calling a specific [styling met
 
 Modal windows themselves can be customized by editing or extending [ofxModalTheme](https://github.com/braitsch/ofxModal/blob/master/src/ofxModalTheme.h).
 
+## Cancelization
+
+All modals with the exception of Alerts can be closed by clicking the "X" in the top right corner or the backdrop behind the modal. You can disable this and "lock" the window onscreen by calling ``setCancelable(false)``. This will also hide any footer buttons that have their label set to "cancel".
+
 ## API Summary
 
 	// public methods //
@@ -175,7 +179,7 @@ Modal windows themselves can be customized by editing or extending [ofxModalThem
 	void setMessageAlignment(ofxParagraph::Alignment align);
 	void setButtonLabel(string label, int buttonIndex = 0);
 	void setAlert(shared_ptr<ofxModalAlert> alert);
-	void setBackdropActive(bool active);
+	void setCancelable(bool cancelable);
 	void setTheme(shared_ptr<ofxModalTheme> theme);
 
 	// protected methods //
