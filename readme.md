@@ -21,9 +21,9 @@ Displaying an Alert is as simple as:
 
 ![ofxModalConfirm](./readme-imgs/alert-window.png)
 
-However it's a good idea to create a single application Alert that can be shared across multiple modal windows.
+However it's a good idea to create a single application Alert that can be shared across multiple modal windows. The following example creates a [custom modal window](#custom-modal) of type LoginModal and assigns an alert to it that displays the result of a login attempt.
 
-	loginModal login;
+	LoginModal login;
 	shared_ptr<ofxModalAlert> myAlert = make_shared<ofxModalAlert>();
 	login.setAlert(myAlert);
 	login.addListener(this, &ofApp::onLoginEvent);
@@ -33,7 +33,9 @@ However it's a good idea to create a single application Alert that can be shared
 	{
 		if (e.type == ofxModalEvent::CONFIRM){
 		// query your custom modal for valid user data //
-			if (login.hasValidUserData() == false){
+			if (login.hasValidUserData()){
+				login.alert("login successful!");
+			}	else{
 				login.alert("error! invalid credentials");
 			}
 		}
@@ -53,15 +55,14 @@ Confirm windows are similar to Alerts except that they also give you a cancel bu
 	{
 		if (e.type == ofxModalEvent::CANCEL){
 			cout << "cancel button was selected" << endl;
-		else if (e.type == ofxModalEvent::CONFIRM){
+		}	else if (e.type == ofxModalEvent::CONFIRM){
 			cout << "confirm button was selected" << endl;
 		}
 	}
 
 ![ofxModalConfirm](./readme-imgs/confirm-window.png)
 
-
-## Custom Modals
+## <a name="custom-modal"></a>Custom Modals
 
 Custom modals extend ofxModalWindow which gives you a window with a title, space for components and a close button.
 
@@ -69,10 +70,10 @@ Custom modals extend ofxModalWindow which gives you a window with a title, space
 
 To add components simply pass an **ofxDatGui** component to the ``addComponent`` method.
 
-	class myLoginModal : public ofxModalWindow
+	class LoginModal : public ofxModalWindow
 	{
 		public:
-			myLoginModal(){
+			LoginModal(){
 				setTitle("Login");
 				addComponent(new ofxDatGuiTextInput("username", "username"));
 				addComponent(new ofxDatGuiTextInput("password", "password"));
@@ -81,7 +82,7 @@ To add components simply pass an **ofxDatGui** component to the ``addComponent``
 
 ![modalLogin](./readme-imgs/login-window-1.png)
 
-The window will autosize to the fit the components as you add them however you can override this by explicity setting the height via ``modal.setHeight();``
+The window will autosize to the fit the components as you add them however you can override this by explicity setting the height via ``myModal.setHeight();``
 
 ## Footer Buttons
 
